@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>ระบบสัญญาซื้อขายที่ดิน — Asiagreen Industrial Estate</title>
+  <script src="docx.umd.min.js"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --green:#1a5c2e;--green2:#2d8a4a;--green3:#e8f5ec;
+      --gold:#c9a227;--dark:#1a2e1a;--gray:#f4f6f4;
+      --border:#d0ddd0;--red:#c0392b;--blue:#1565c0;
+    }
+    body{font-family:'Sarabun','Segoe UI',system-ui,sans-serif;background:var(--gray);color:var(--dark);min-height:100vh;font-size:15px}
+
+    /* HEADER */
+    header{background:linear-gradient(135deg,var(--green),var(--green2));color:white;padding:0;box-shadow:0 3px 12px rgba(0,0,0,0.25)}
+    .header-top{display:flex;align-items:center;gap:18px;padding:18px 32px}
+    .header-logo{width:64px;height:64px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:3px solid var(--gold)}
+    .header-logo span{font-size:28px}
+    .header-title h1{font-size:20px;font-weight:800;letter-spacing:0.3px}
+    .header-title p{font-size:12px;opacity:0.85;margin-top:3px}
+    .header-title .en{font-size:11px;opacity:0.7;margin-top:1px}
+    .contract-num-bar{background:rgba(0,0,0,0.2);padding:8px 32px;display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+    .contract-num-bar label{font-size:12px;opacity:0.8}
+    .contract-num-bar input{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:4px 10px;border-radius:5px;font-family:inherit;font-size:13px;width:160px}
+    .contract-num-bar input::placeholder{color:rgba(255,255,255,0.5)}
+
+    /* TABS */
+    .tabs{display:flex;background:var(--green);overflow-x:auto;gap:0;padding:0 24px}
+    .tab{padding:12px 18px;color:rgba(255,255,255,0.7);cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;border-bottom:3px solid transparent;transition:all 0.2s;user-select:none}
+    .tab:hover{color:white;background:rgba(255,255,255,0.08)}
+    .tab.active{color:white;border-bottom-color:var(--gold);background:rgba(255,255,255,0.12)}
+
+    /* MAIN */
+    main{max-width:1000px;margin:0 auto;padding:24px 16px;display:flex;flex-direction:column;gap:20px}
+    .section-pane{display:none}
+    .section-pane.active{display:flex;flex-direction:column;gap:20px}
+
+    /* CARD */
+    .card{background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.08);overflow:hidden}
+    .card-header{background:#f3f9f4;border-bottom:1px solid var(--border);padding:13px 20px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:var(--green)}
+    .card-header .icon{font-size:18px}
+    .card-body{padding:20px}
+
+    /* FORM GRID */
+    .form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+    .form-grid.cols2{grid-template-columns:1fr 1fr}
+    .form-grid.cols3{grid-template-columns:1fr 1fr 1fr}
+    .full{grid-column:1/-1}
+    .field{display:flex;flex-direction:column;gap:5px}
+    .field label{font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:0.5px}
+    .field label span.en{font-weight:400;color:#888;text-transform:none}
+    input,select,textarea{border:1.5px solid var(--border);border-radius:7px;padding:9px 12px;font-size:14px;font-family:inherit;color:var(--dark);background:white;transition:border-color 0.15s}
+    input:focus,select:focus,textarea:focus{outline:none;border-color:var(--green2);box-shadow:0 0 0 3px rgba(45,138,74,0.12)}
+    .field-row{display:flex;gap:8px;align-items:flex-end}
+    .field-row input{flex:1}
+    .field-row .unit{font-size:12px;color:#888;white-space:nowrap;padding-bottom:10px}
+
+    /* PRICE SUMMARY */
+    .price-summary{background:var(--green3);border:1px solid #b2dfbd;border-radius:10px;padding:16px 20px;margin-top:12px}
+    .price-summary .row{display:flex;justify-content:space-between;padding:4px 0;font-size:14px;border-bottom:1px solid #c8e6cc}
+    .price-summary .row:last-child{border:none;font-weight:800;font-size:16px;color:var(--green);margin-top:4px}
+
+    /* PERMITS TABLE */
+    .permits-table{width:100%;border-collapse:collapse;font-size:13px}
+    .permits-table th{background:var(--green3);padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;border-bottom:2px solid #b2dfbd}
+    .permits-table td{padding:10px 12px;border-bottom:1px solid #edf3ed;vertical-align:top}
+    .permits-table tr:hover td{background:#f9fdf9}
+    .permit-badge{display:inline-block;background:var(--green3);color:var(--green);padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+    .permit-badge.required{background:#fff3e0;color:#e65100}
+    .permit-badge.optional{background:#e8eaf6;color:#3949ab}
+
+    /* STATUS DOT */
+    .status-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
+    .status-dot.pending{background:#f39c12}
+    .status-dot.obtained{background:#27ae60}
+
+    /* PERMIT CONTROLS */
+    .permit-select{padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:inherit;cursor:pointer}
+
+    /* CONTRACT PREVIEW */
+    .contract-preview{background:#fffef8;border:1px solid #e0d88a;border-radius:10px;padding:32px 40px;font-size:13.5px;line-height:1.85;max-height:700px;overflow-y:auto}
+    .contract-preview h2{text-align:center;font-size:16px;font-weight:800;margin-bottom:4px;color:var(--dark)}
+    .contract-preview h3{text-align:center;font-size:13px;color:#555;margin-bottom:20px}
+    .contract-preview .contract-no{text-align:right;font-size:12px;color:#777;margin-bottom:16px}
+    .contract-preview .clause{margin-bottom:14px}
+    .contract-preview .clause-title{font-weight:700;font-size:14px;color:var(--green);margin-bottom:6px}
+    .contract-preview .sub{padding-left:20px;margin-bottom:4px}
+    .contract-preview .sig-block{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px}
+    .contract-preview .sig-line{border-bottom:1px solid #999;margin:8px 0 4px;height:40px}
+    .contract-preview .sig-label{font-size:12px;color:#555;text-align:center}
+    .contract-preview table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12.5px}
+    .contract-preview table th{background:#f0f7f0;padding:7px 10px;border:1px solid #cdd;text-align:left}
+    .contract-preview table td{padding:7px 10px;border:1px solid #dde}
+
+    /* BUTTONS */
+    .action-bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:16px 20px;background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+    .btn{border:none;border-radius:8px;padding:11px 20px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.15s,transform 0.1s;display:inline-flex;align-items:center;gap:8px}
+    .btn:hover{opacity:0.88}
+    .btn:active{transform:scale(0.97)}
+    .btn-green{background:var(--green);color:white}
+    .btn-gold{background:var(--gold);color:white}
+    .btn-blue{background:var(--blue);color:white}
+    .btn-outline{background:white;color:var(--green);border:2px solid var(--green)}
+    .btn-red{background:var(--red);color:white;font-size:12px;padding:6px 10px}
+    .btn-sm{font-size:12px;padding:6px 12px}
+
+    /* NAV BUTTONS */
+    .tab-nav{display:flex;justify-content:space-between}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:white;padding:12px 22px;border-radius:24px;font-size:14px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,0.2);transition:transform 0.3s;z-index:99;white-space:nowrap}
+    .toast.show{transform:translateX(-50%) translateY(0)}
+
+    /* PERMIT ADD ROW */
+    .add-permit-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border)}
+
+    /* INFO BOX */
+    .info-box{background:#e3f2fd;border:1px solid #90caf9;border-radius:8px;padding:12px 16px;font-size:13px;color:#0d47a1}
+
+    /* LANG TOGGLE */
+    .lang-toggle{display:flex;gap:4px;margin-left:auto;flex-shrink:0}
+    .lang-btn{border:2px solid rgba(255,255,255,0.5);background:transparent;color:rgba(255,255,255,0.7);border-radius:6px;padding:5px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.15s}
+    .lang-btn.active{background:white;color:var(--green);border-color:white}
+    .lang-btn:hover:not(.active){color:white;border-color:white}
+
+    @media(max-width:640px){
+      .form-grid.cols3,.form-grid.cols2{grid-template-columns:1fr}
+      .header-top{padding:14px 16px}
+      .contract-num-bar{padding:8px 16px}
+      .contract-preview{padding:20px}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="header-logo"><span>🏭</span></div>
+    <div class="header-title">
+      <h1 data-t="appTitle">ระบบสัญญาซื้อขายที่ดิน</h1>
+      <p data-t="sellerFull">บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด</p>
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btnTH" onclick="setLang('th')">TH</button>
+      <button class="lang-btn" id="btnEN" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+  <div class="contract-num-bar">
+    <div><label data-t="contractNo">เลขที่สัญญา / Contract No.</label><br>
+      <input type="text" id="contractNo" placeholder="AG-2568-001" /></div>
+    <div><label data-t="contractDate">วันที่ทำสัญญา / Date</label><br>
+      <input type="date" id="contractDate" /></div>
+    <div><label data-t="contractPlace">สถานที่ทำสัญญา / Executed at</label><br>
+      <input type="text" id="contractPlace" data-tp="contractPlacePH" placeholder="นิคมอุตสาหกรรมเอเชียกรีน" style="width:220px"/></div>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)" data-t="tab0">👤 ข้อมูลผู้ซื้อ</div>
+  <div class="tab" onclick="switchTab(1)" data-t="tab1">🗺️ รายละเอียดที่ดิน</div>
+  <div class="tab" onclick="switchTab(2)" data-t="tab2">🏭 วัตถุประสงค์ & กำหนดเวลา</div>
+  <div class="tab" onclick="switchTab(3)" data-t="tab3">📋 ใบอนุญาตตามกฎหมาย</div>
+  <div class="tab" onclick="switchTab(4)" data-t="tab4">📄 สัญญา & ส่งออก</div>
+</div>
+
+<main>
+
+<!-- TAB 0: PURCHASER PROFILE -->
+<div class="section-pane active" id="pane0">
+  <div class="card">
+    <div class="card-header"><span class="icon">🏢</span> <span data-t="cardBuyer">ข้อมูลบริษัทผู้ซื้อ</span> <span style="font-weight:400;font-size:12px;color:#888;margin-left:8px" data-t="cardBuyerSub">Purchaser Profile</span></div>
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="field full"><label data-t="fBuyerNameTH">ชื่อบริษัท (ภาษาไทย)</label>
+          <input type="text" id="buyerNameTH" data-tp="phBuyerNameTH" placeholder="บริษัท .................. จำกัด" /></div>
+        <div class="field full"><label data-t="fBuyerNameEN">ชื่อบริษัท (ภาษาอังกฤษ)</label>
+          <input type="text" id="buyerNameEN" placeholder="....... Co., Ltd." /></div>
+        <div class="field"><label data-t="fRegNo">เลขทะเบียนนิติบุคคล</label>
+          <input type="text" id="buyerRegNo" placeholder="0105560000000" /></div>
+        <div class="field"><label data-t="fTaxId">เลขประจำตัวผู้เสียภาษี</label>
+          <input type="text" id="buyerTaxId" placeholder="0105560000000" /></div>
+        <div class="field full"><label data-t="fAddr">ที่อยู่จดทะเบียน</label>
+          <textarea id="buyerAddr" rows="2" data-tp="phAddr" placeholder="เลขที่ ......... ถนน ......... ตำบล/แขวง ......... อำเภอ/เขต ......... จังหวัด ......... รหัสไปรษณีย์ ........."></textarea></div>
+        <div class="field"><label data-t="fBuyerRep">ผู้มีอำนาจลงนาม</label>
+          <input type="text" id="buyerRep" data-tp="phRep" placeholder="นาย/นาง/นางสาว ................." /></div>
+        <div class="field"><label data-t="fRepTitle">ตำแหน่ง</label>
+          <input type="text" id="buyerRepTitle" data-tp="phBuyerTitle" placeholder="กรรมการผู้จัดการ / กรรมการ" /></div>
+        <div class="field"><label data-t="fIdNo">เลขบัตรประชาชน / Passport</label>
+          <input type="text" id="buyerIdNo" placeholder="0-0000-00000-00-0" /></div>
+        <div class="field"><label data-t="fPhone">โทรศัพท์</label>
+          <input type="tel" id="buyerPhone" placeholder="02-000-0000" /></div>
+        <div class="field"><label data-t="fEmail">อีเมล</label>
+          <input type="email" id="buyerEmail" placeholder="contact@company.com" /></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🏢</span> <span data-t="cardSeller">ข้อมูลผู้ขาย (คงที่)</span> <span style="font-weight:400;font-size:12px;color:#888;margin-left:8px" data-t="cardSellerSub">Seller Info (Fixed)</span></div>
+    <div class="card-body">
+      <div class="form-grid cols3">
+        <div class="field"><label data-t="fSellerName">ชื่อบริษัทผู้ขาย</label><input type="text" value="บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด" readonly style="background:#f5f5f5;color:#555"/></div>
+        <div class="field"><label data-t="fSellerRep">ผู้มีอำนาจลงนาม (ผู้ขาย)</label>
+          <input type="text" id="sellerRep" data-tp="phRep" placeholder="นาย/นาง/นางสาว ................." /></div>
+        <div class="field"><label data-t="fRepTitle">ตำแหน่ง</label>
+          <input type="text" id="sellerRepTitle" data-tp="phSellerTitle" placeholder="กรรมการผู้จัดการ" /></div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-nav"><div></div><button class="btn btn-green" onclick="switchTab(1)" data-t="btnNextLand">ถัดไป: รายละเอียดที่ดิน →</button></div>
+</div>
+
+<!-- TAB 1: LAND DETAILS -->
+<div class="section-pane" id="pane1">
+  <div class="card">
+    <div class="card-header"><span class="icon">🗺️</span> <span data-t="cardLand">รายละเอียดที่ดิน</span> <span style="font-weight:400;font-size:12px;color:#888;margin-left:8px" data-t="cardLandSub">Land Details</span></div>
+    <div class="card-body">
+      <div class="form-grid cols3">
+        <div class="field"><label data-t="fPlotNo">เลขที่แปลงที่ดิน</label>
+          <input type="text" id="plotNo" placeholder="AG-P-001" /></div>
+        <div class="field"><label data-t="fDeedNo">เลขที่โฉนดที่ดิน</label>
+          <input type="text" id="titleDeedNo" placeholder="12345" /></div>
+        <div class="field"><label data-t="fVolPage">เล่มที่ / หน้า</label>
+          <input type="text" id="deedVolPage" placeholder="00 / 000" /></div>
+        <div class="field full"><label data-t="fLandLoc">ที่ตั้งที่ดิน</label>
+          <input type="text" id="landLocation" data-tp="phLandLoc" placeholder="ตำบล ......... อำเภอ ......... จังหวัด ........." /></div>
+        <div class="field full"><label data-t="fLandZone">บริเวณ / โซน ในนิคมอุตสาหกรรม</label>
+          <input type="text" id="landZone" data-tp="phLandZone" placeholder="เช่น โซน A แถวที่ 3 แปลงที่ 12" /></div>
+      </div>
+
+      <div style="margin-top:16px"><strong style="font-size:14px;color:var(--green)" data-t="landSizeTitle">ขนาดที่ดิน / Land Size</strong></div>
+      <div class="form-grid cols3" style="margin-top:10px">
+        <div class="field">
+          <label data-t="fRai">ไร่</label>
+          <div class="field-row"><input type="number" id="landRai" placeholder="0" min="0" step="0.01" oninput="calcPrice()"/><span class="unit" data-t="uRai">ไร่</span></div>
+        </div>
+        <div class="field">
+          <label data-t="fNgan">งาน</label>
+          <div class="field-row"><input type="number" id="landNgan" placeholder="0" min="0" max="3" oninput="calcPrice()"/><span class="unit" data-t="uNgan">งาน</span></div>
+        </div>
+        <div class="field">
+          <label data-t="fSqwah">ตารางวา</label>
+          <div class="field-row"><input type="number" id="landSqwah" placeholder="0" min="0" max="99" oninput="calcPrice()"/><span class="unit" data-t="uSqwah">ตร.วา</span></div>
+        </div>
+        <div class="field">
+          <label data-t="fSqm">พื้นที่รวม (ตร.ม.)</label>
+          <input type="text" id="landSqm" data-tp="phAuto" placeholder="อัตโนมัติ" readonly style="background:#f5f5f5" /></div>
+        <div class="field">
+          <label data-t="fPriceRai">ราคาต่อไร่ (บาท)</label>
+          <input type="number" id="pricePerRai" placeholder="0" min="0" oninput="calcPrice()" /></div>
+        <div class="field">
+          <label data-t="fPriceSqm">ราคาต่อตร.ม. (บาท)</label>
+          <input type="number" id="pricePerSqm" data-tp="phAuto" placeholder="อัตโนมัติ" readonly style="background:#f5f5f5" /></div>
+      </div>
+
+      <div class="price-summary" id="priceSummary">
+        <div class="row"><span data-t="sumLandSize">ขนาดที่ดิน</span><span id="sumSize">—</span></div>
+        <div class="row"><span data-t="sumPriceRai">ราคาต่อไร่</span><span id="sumRate">—</span></div>
+        <div class="row"><span data-t="sumSubtotal">ราคาที่ดินรวม (ก่อนภาษี)</span><span id="sumTotal">—</span></div>
+        <div class="row"><span data-t="sumTaxLabel">ภาษีธุรกิจเฉพาะ 3.3%</span><span id="sumTax">—</span></div>
+        <div class="row"><span data-t="sumGrandLabel">💰 ราคาสุทธิรวมภาษี</span><span id="sumGrand">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">💳</span> <span data-t="cardPayment">เงื่อนไขการชำระเงิน</span> <span style="font-weight:400;font-size:12px;color:#888;margin-left:8px" data-t="cardPaymentSub">Payment Terms</span></div>
+    <div class="card-body">
+      <div class="form-grid cols3">
+        <div class="field"><label data-t="fDeposit">เงินจอง (บาท)</label>
+          <input type="number" id="depositAmt" placeholder="0" /></div>
+        <div class="field"><label data-t="fDownPct">เงินดาวน์ (%)</label>
+          <input type="number" id="downPct" placeholder="30" min="0" max="100" /></div>
+        <div class="field"><label data-t="fTransferDate">วันโอนกรรมสิทธิ์</label>
+          <input type="date" id="transferDate" /></div>
+        <div class="field full"><label data-t="fPayTerms">เงื่อนไขการชำระเงินเพิ่มเติม</label>
+          <textarea id="paymentTerms" rows="2" data-tp="phPayTerms" placeholder="เช่น ชำระส่วนที่เหลือ 70% ณ วันโอนกรรมสิทธิ์..."></textarea></div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-nav">
+    <button class="btn btn-outline" onclick="switchTab(0)" data-t="btnBack">← กลับ</button>
+    <button class="btn btn-green" onclick="switchTab(2)" data-t="btnNextPurpose">ถัดไป: วัตถุประสงค์ →</button>
+  </div>
+</div>
+
+<!-- TAB 2: PURPOSE & TIMELINE -->
+<div class="section-pane" id="pane2">
+  <div class="card">
+    <div class="card-header"><span class="icon">🏭</span> <span data-t="cardPurpose">ประเภทธุรกิจและวัตถุประสงค์การใช้ที่ดิน</span> <span style="font-weight:400;font-size:12px;color:#888;margin-left:8px" data-t="cardPurposeSub">Business Type &amp; Purpose of Use</span></div>
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="field">
+          <label data-t="fIndustry">ประเภทอุตสาหกรรม</label>
+          <select id="industryType" onchange="autoPopulatePermits()">
+            <option value="" data-t="optSelectType">— เลือกประเภท —</option>
+            <option value="electronics">อิเล็กทรอนิกส์ & ไฟฟ้า (Electronics & Electrical)</option>
+            <option value="automotive">ยานยนต์ & ชิ้นส่วน (Automotive & Parts)</option>
+            <option value="food">อาหาร & เครื่องดื่ม (Food & Beverage)</option>
+            <option value="chemical">เคมีภัณฑ์ & ปิโตรเคมี (Chemical & Petrochemical)</option>
+            <option value="pharma">ยา & เวชภัณฑ์ (Pharmaceutical & Medical)</option>
+            <option value="metal">โลหะ & เหล็ก (Metal & Steel)</option>
+            <option value="plastic">พลาสติก & ยาง (Plastic & Rubber)</option>
+            <option value="textile">สิ่งทอ & เครื่องนุ่งห่ม (Textile & Garment)</option>
+            <option value="logistics">โลจิสติกส์ & คลังสินค้า (Logistics & Warehouse)</option>
+            <option value="packaging">บรรจุภัณฑ์ (Packaging)</option>
+            <option value="agro">เกษตรแปรรูป (Agro-processing)</option>
+            <option value="general">การผลิตทั่วไป (General Manufacturing)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-t="fFactoryType">ประเภทโรงงาน (ตาม พ.ร.บ. โรงงาน)</label>
+          <select id="factoryType">
+            <option value="" data-t="optSelect">— เลือก —</option>
+            <option value="type1" data-t="optFactory1">โรงงานประเภทที่ 1 (เปิดได้เลย)</option>
+            <option value="type2" data-t="optFactory2">โรงงานประเภทที่ 2 (แจ้งก่อนประกอบ)</option>
+            <option value="type3" data-t="optFactory3">โรงงานประเภทที่ 3 (ต้องขออนุญาต)</option>
+          </select>
+        </div>
+        <div class="field full"><label data-t="fProdDetail">รายละเอียดการผลิต / กิจกรรม</label>
+          <textarea id="productionDetail" rows="2" data-tp="phProdDetail" placeholder="เช่น ผลิตชิ้นส่วนอิเล็กทรอนิกส์, กำลังการผลิต X ชิ้น/วัน..."></textarea></div>
+        <div class="field"><label data-t="fCapacity">กำลังการผลิต</label>
+          <input type="text" id="capacity" data-tp="phCapacity" placeholder="เช่น 10,000 ชิ้น/วัน" /></div>
+        <div class="field"><label data-t="fWorkers">จำนวนแรงงาน (คน)</label>
+          <input type="number" id="workers" placeholder="100" min="0" /></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">📅</span> <span data-t="cardTimeline">กำหนดเวลาการก่อสร้างและดำเนินการ</span> <span style="font-weight:400;font-size:12px;color:#888;margin-left:8px" data-t="cardTimelineSub">Construction &amp; Commencement Timeline</span></div>
+    <div class="card-body">
+      <div class="form-grid cols3">
+        <div class="field"><label data-t="fConstructStart">วันเริ่มก่อสร้าง</label>
+          <input type="date" id="constructStart" /></div>
+        <div class="field"><label data-t="fConstructEnd">วันก่อสร้างแล้วเสร็จ</label>
+          <input type="date" id="constructEnd" /></div>
+        <div class="field"><label data-t="fConstructMonths">ระยะเวลาก่อสร้าง (เดือน)</label>
+          <input type="number" id="constructMonths" placeholder="18" min="1" /></div>
+        <div class="field"><label data-t="fCommenceDate">วันเริ่มดำเนินการเชิงพาณิชย์</label>
+          <input type="date" id="commenceDate" /></div>
+        <div class="field"><label data-t="fLicenseDeadline">กำหนดเวลาขอใบอนุญาตโรงงาน</label>
+          <input type="date" id="licenseDeadline" /></div>
+        <div class="field"><label data-t="fUsePeriod">ระยะเวลาการใช้ที่ดิน (ปี)</label>
+          <input type="number" id="usePeriod" placeholder="30" min="1" /></div>
+      </div>
+      <div class="info-box" style="margin-top:14px" data-t="infoTimeline">
+        ℹ️ ผู้ซื้อต้องเริ่มก่อสร้างภายใน 12 เดือนนับจากวันโอนกรรมสิทธิ์ และต้องเริ่มดำเนินการเชิงพาณิชย์ภายในกำหนด มิฉะนั้นถือว่าผิดสัญญา
+        <br><em>The Purchaser must commence construction within 12 months from the transfer date and commence commercial operations by the stipulated date, otherwise it constitutes a breach of contract.</em>
+      </div>
+    </div>
+  </div>
+  <div class="tab-nav">
+    <button class="btn btn-outline" onclick="switchTab(1)" data-t="btnBack">← กลับ</button>
+    <button class="btn btn-green" onclick="switchTab(3)" data-t="btnNextPermit">ถัดไป: ใบอนุญาต →</button>
+  </div>
+</div>
+
+<!-- TAB 3: PERMITS -->
+<div class="section-pane" id="pane3">
+  <div class="card">
+    <div class="card-header" style="justify-content:space-between">
+      <span><span class="icon">📋</span> <span data-t="cardPermits">ใบอนุญาตที่ต้องได้รับตามกฎหมายไทย</span> <span style="font-weight:400;font-size:12px;color:#888;margin-left:8px" data-t="cardPermitsSub">Required Permits under Thai Law</span></span>
+      <button class="btn btn-outline btn-sm" onclick="switchTab(2);setTimeout(()=>autoPopulatePermits(),100)" data-t="btnRefresh">🔄 รีเฟรช</button>
+    </div>
+    <div class="card-body">
+      <div class="info-box" id="permitInfo" style="margin-bottom:14px" data-t="infoPermit">
+        ℹ️ เลือกประเภทอุตสาหกรรมในแท็บ "วัตถุประสงค์" เพื่อแสดงใบอนุญาตที่เกี่ยวข้องโดยอัตโนมัติ
+      </div>
+      <div class="table-wrap" style="overflow-x:auto">
+        <table class="permits-table" id="permitsTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th data-t="thPermitName">ชื่อใบอนุญาต / Permit Name</th>
+              <th data-t="thLaw">กฎหมายอ้างอิง / Legal Reference</th>
+              <th data-t="thAuthority">หน่วยงานออกใบอนุญาต / Issuing Authority</th>
+              <th data-t="thType">ประเภท / Type</th>
+              <th data-t="thStatus">สถานะ / Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="permitsBody">
+            <tr><td colspan="7" style="text-align:center;padding:30px;color:#aaa">เลือกประเภทอุตสาหกรรมเพื่อแสดงใบอนุญาตโดยอัตโนมัติ</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Add custom permit -->
+      <div class="add-permit-row">
+        <div class="field"><label style="font-size:11px" data-t="fNewPermit">ชื่อใบอนุญาตเพิ่มเติม</label><input type="text" id="newPermitName" data-tp="phNewPermit" placeholder="ระบุชื่อใบอนุญาต..." /></div>
+        <div class="field"><label style="font-size:11px" data-t="thLaw">กฎหมายอ้างอิง</label><input type="text" id="newPermitLaw" data-tp="phNewLaw" placeholder="พ.ร.บ. / ประกาศ..." /></div>
+        <div class="field"><label style="font-size:11px" data-t="fNewAuth">หน่วยงาน</label><input type="text" id="newPermitAuth" data-tp="phNewAuth" placeholder="กรมโรงงาน / อบต. ..." /></div>
+        <button class="btn btn-green btn-sm" onclick="addCustomPermit()" data-t="btnAddPermit">+ เพิ่ม</button>
+      </div>
+    </div>
+  </div>
+  <div class="tab-nav">
+    <button class="btn btn-outline" onclick="switchTab(2)" data-t="btnBack">← กลับ</button>
+    <button class="btn btn-green" onclick="switchTab(4)" data-t="btnNextContract">ถัดไป: สร้างสัญญา →</button>
+  </div>
+</div>
+
+<!-- TAB 4: CONTRACT & EXPORT -->
+<div class="section-pane" id="pane4">
+  <div class="action-bar">
+    <div style="font-size:14px;font-weight:600;color:var(--green)" data-t="exportReady">📄 พร้อมสร้างสัญญาซื้อขายที่ดิน</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-outline" onclick="refreshPreview()" data-t="btnPreview">🔄 อัปเดตตัวอย่าง</button>
+      <button class="btn btn-gold" onclick="generateDocx()" data-t="btnDocx">📝 ดาวน์โหลด Word (.docx)</button>
+      <button class="btn btn-blue" onclick="sendEmail()" data-t="btnEmail">✉️ ส่งอีเมลผู้ซื้อ</button>
+      <button class="btn btn-green" onclick="window.print()" data-t="btnPrint">🖨️ พิมพ์</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">👁️</span> <span data-t="cardPreview">ตัวอย่างสัญญา</span> <span style="font-weight:400;font-size:12px;color:#888;margin-left:8px" data-t="cardPreviewSub">Contract Preview</span></div>
+    <div class="card-body" style="padding:0">
+      <div class="contract-preview" id="contractPreview">
+        <p style="text-align:center;color:#aaa;padding:40px" data-t="previewPlaceholder">กรุณากรอกข้อมูลให้ครบถ้วนแล้วกด "อัปเดตตัวอย่าง"</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-nav">
+    <button class="btn btn-outline" onclick="switchTab(3)" data-t="btnBack">← กลับ</button>
+    <button class="btn btn-gold" onclick="generateDocx()" data-t="btnDocx">📝 ดาวน์โหลด Word (.docx)</button>
+  </div>
+</div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── TRANSLATIONS ────────────────────────────────────────────────────────────
+const T = {
+  th: {
+    appTitle:'ระบบสัญญาซื้อขายที่ดิน', appSub:'บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด — ระบบสัญญาซื้อขายที่ดินในนิคมอุตสาหกรรม',
+    sellerFull:'บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด',
+    contractNo:'เลขที่สัญญา', contractDate:'วันที่ทำสัญญา', contractPlace:'สถานที่ทำสัญญา',
+    contractPlacePH:'นิคมอุตสาหกรรมเอเชียกรีน',
+    tab0:'👤 ข้อมูลผู้ซื้อ', tab1:'🗺️ รายละเอียดที่ดิน', tab2:'🏭 วัตถุประสงค์ & กำหนดเวลา',
+    tab3:'📋 ใบอนุญาตตามกฎหมาย', tab4:'📄 สัญญา & ส่งออก',
+    cardBuyer:'ข้อมูลบริษัทผู้ซื้อ', cardBuyerSub:'โปรไฟล์ผู้ซื้อ',
+    cardSeller:'ข้อมูลผู้ขาย (คงที่)', cardSellerSub:'ข้อมูลผู้ขาย',
+    fBuyerNameTH:'ชื่อบริษัท (ภาษาไทย)', fBuyerNameEN:'ชื่อบริษัท (ภาษาอังกฤษ)',
+    fRegNo:'เลขทะเบียนนิติบุคคล', fTaxId:'เลขประจำตัวผู้เสียภาษี',
+    fAddr:'ที่อยู่จดทะเบียน', fBuyerRep:'ผู้มีอำนาจลงนาม (ผู้ซื้อ)',
+    fRepTitle:'ตำแหน่ง', fIdNo:'เลขบัตรประชาชน / Passport',
+    fPhone:'โทรศัพท์', fEmail:'อีเมล',
+    fSellerName:'ชื่อบริษัทผู้ขาย', fSellerRep:'ผู้มีอำนาจลงนาม (ผู้ขาย)',
+    phBuyerNameTH:'บริษัท .................. จำกัด', phRep:'นาย/นาง/นางสาว ...................',
+    phAddr:'เลขที่ ......... ถนน ......... ตำบล/แขวง ......... อำเภอ/เขต ......... จังหวัด ......... รหัสไปรษณีย์ .........',
+    phBuyerTitle:'กรรมการผู้จัดการ / กรรมการ', phSellerTitle:'กรรมการผู้จัดการ',
+    btnNextLand:'ถัดไป: รายละเอียดที่ดิน →', btnBack:'← กลับ',
+    btnNextPurpose:'ถัดไป: วัตถุประสงค์ →', btnNextPermit:'ถัดไป: ใบอนุญาต →',
+    btnNextContract:'ถัดไป: สร้างสัญญา →',
+    cardLand:'รายละเอียดที่ดิน', cardLandSub:'ข้อมูลที่ดิน',
+    fPlotNo:'เลขที่แปลงที่ดิน', fDeedNo:'เลขที่โฉนดที่ดิน', fVolPage:'เล่มที่ / หน้า',
+    fLandLoc:'ที่ตั้งที่ดิน', fLandZone:'บริเวณ / โซน ในนิคมอุตสาหกรรม',
+    phLandLoc:'ตำบล ......... อำเภอ ......... จังหวัด .........', phLandZone:'เช่น โซน A แถวที่ 3 แปลงที่ 12',
+    landSizeTitle:'ขนาดที่ดิน / Land Size',
+    fRai:'ไร่', fNgan:'งาน', fSqwah:'ตารางวา', uRai:'ไร่', uNgan:'งาน', uSqwah:'ตร.วา',
+    fSqm:'พื้นที่รวม (ตร.ม.)', fPriceRai:'ราคาต่อไร่ (บาท)', fPriceSqm:'ราคาต่อตร.ม. (บาท)',
+    phAuto:'อัตโนมัติ',
+    sumLandSize:'ขนาดที่ดิน', sumPriceRai:'ราคาต่อไร่', sumSubtotal:'ราคาที่ดินรวม (ก่อนภาษี)',
+    sumTaxLabel:'ภาษีธุรกิจเฉพาะ 3.3%', sumGrandLabel:'💰 ราคาสุทธิรวมภาษี',
+    cardPayment:'เงื่อนไขการชำระเงิน', cardPaymentSub:'เงื่อนไขการชำระเงิน',
+    fDeposit:'เงินจอง (บาท)', fDownPct:'เงินดาวน์ (%)', fTransferDate:'วันโอนกรรมสิทธิ์',
+    fPayTerms:'เงื่อนไขการชำระเงินเพิ่มเติม',
+    phPayTerms:'เช่น ชำระส่วนที่เหลือ 70% ณ วันโอนกรรมสิทธิ์...',
+    cardPurpose:'ประเภทธุรกิจและวัตถุประสงค์การใช้ที่ดิน', cardPurposeSub:'ประเภทธุรกิจ & วัตถุประสงค์',
+    fIndustry:'ประเภทอุตสาหกรรม', optSelectType:'— เลือกประเภท —',
+    fFactoryType:'ประเภทโรงงาน (ตาม พ.ร.บ. โรงงาน)',
+    optSelect:'— เลือก —', optFactory1:'โรงงานประเภทที่ 1 (เปิดได้เลย)',
+    optFactory2:'โรงงานประเภทที่ 2 (แจ้งก่อนประกอบ)', optFactory3:'โรงงานประเภทที่ 3 (ต้องขออนุญาต)',
+    fProdDetail:'รายละเอียดการผลิต / กิจกรรม', phProdDetail:'เช่น ผลิตชิ้นส่วนอิเล็กทรอนิกส์, กำลังการผลิต X ชิ้น/วัน...',
+    fCapacity:'กำลังการผลิต', phCapacity:'เช่น 10,000 ชิ้น/วัน', fWorkers:'จำนวนแรงงาน (คน)',
+    cardTimeline:'กำหนดเวลาการก่อสร้างและดำเนินการ', cardTimelineSub:'ตารางเวลาก่อสร้างและดำเนินการ',
+    fConstructStart:'วันเริ่มก่อสร้าง', fConstructEnd:'วันก่อสร้างแล้วเสร็จ',
+    fConstructMonths:'ระยะเวลาก่อสร้าง (เดือน)', fCommenceDate:'วันเริ่มดำเนินการเชิงพาณิชย์',
+    fLicenseDeadline:'กำหนดเวลาขอใบอนุญาตโรงงาน', fUsePeriod:'ระยะเวลาการใช้ที่ดิน (ปี)',
+    infoTimeline:'ℹ️ ผู้ซื้อต้องเริ่มก่อสร้างภายใน 12 เดือนนับจากวันโอนกรรมสิทธิ์ และต้องเริ่มดำเนินการเชิงพาณิชย์ภายในกำหนด มิฉะนั้นถือว่าผิดสัญญา',
+    cardPermits:'ใบอนุญาตที่ต้องได้รับตามกฎหมายไทย', cardPermitsSub:'ใบอนุญาตตามกฎหมาย',
+    btnRefresh:'🔄 รีเฟรช',
+    infoPermit:'ℹ️ เลือกประเภทอุตสาหกรรมในแท็บ "วัตถุประสงค์" เพื่อแสดงใบอนุญาตที่เกี่ยวข้องโดยอัตโนมัติ',
+    thPermitName:'ชื่อใบอนุญาต', thLaw:'กฎหมายอ้างอิง', thAuthority:'หน่วยงานออกใบอนุญาต',
+    thType:'ประเภท', thStatus:'สถานะ',
+    fNewPermit:'ชื่อใบอนุญาตเพิ่มเติม', fNewAuth:'หน่วยงาน',
+    phNewPermit:'ระบุชื่อใบอนุญาต...', phNewLaw:'พ.ร.บ. / ประกาศ...', phNewAuth:'กรมโรงงาน / อบต. ...',
+    btnAddPermit:'+ เพิ่ม',
+    exportReady:'📄 พร้อมสร้างสัญญาซื้อขายที่ดิน',
+    btnPreview:'🔄 อัปเดตตัวอย่าง', btnDocx:'📝 ดาวน์โหลด Word (.docx)',
+    btnEmail:'✉️ ส่งอีเมลผู้ซื้อ', btnPrint:'🖨️ พิมพ์',
+    cardPreview:'ตัวอย่างสัญญา', cardPreviewSub:'Contract Preview',
+    // permit status options
+    statusPending:'⏳ รอดำเนินการ', statusObtained:'✅ ได้รับแล้ว', statusApplied:'📋 ยื่นขอแล้ว',
+    badgeRequired:'บังคับ', badgeOptional:'เพิ่มเติม',
+    noPermits:'เลือกประเภทอุตสาหกรรมเพื่อแสดงใบอนุญาตโดยอัตโนมัติ',
+    toastAdded:'เพิ่มใบอนุญาตแล้ว', toastFillPermit:'กรุณาระบุชื่อใบอนุญาต',
+    toastFillEmail:'กรุณาระบุอีเมลผู้ซื้อในแท็บ "ข้อมูลผู้ซื้อ"',
+    toastGenerating:'⏳ กำลังสร้างไฟล์ Word...', toastDone:'✅ ดาวน์โหลดไฟล์ Word แล้ว!',
+    toastPreview:'อัปเดตตัวอย่างสัญญาแล้ว',
+    previewPlaceholder:'กรุณากรอกข้อมูลให้ครบถ้วนแล้วกด "อัปเดตตัวอย่าง"',
+    // optional addon
+    optionalSection:'ใบอนุญาตเพิ่มเติม (ตามความจำเป็น)',
+  },
+  en: {
+    appTitle:'Land Sales Contract System',
+    sellerFull:'Asiagreen Industrial Estate Co., Ltd. — Land Sales Contract System',
+    contractNo:'Contract No.', contractDate:'Contract Date', contractPlace:'Executed at',
+    contractPlacePH:'Asiagreen Industrial Estate',
+    tab0:'👤 Purchaser Info', tab1:'🗺️ Land Details', tab2:'🏭 Purpose & Timeline',
+    tab3:'📋 Permits & Licenses', tab4:'📄 Contract & Export',
+    cardBuyer:'Purchaser Company Profile', cardBuyerSub:'Purchaser Profile',
+    cardSeller:'Seller Info (Fixed)', cardSellerSub:'Seller Info',
+    fBuyerNameTH:'Company Name (Thai)', fBuyerNameEN:'Company Name (English)',
+    fRegNo:'Company Registration No.', fTaxId:'Tax ID',
+    fAddr:'Registered Address', fBuyerRep:'Authorized Representative (Purchaser)',
+    fRepTitle:'Position / Title', fIdNo:'ID Card / Passport No.',
+    fPhone:'Phone', fEmail:'Email',
+    fSellerName:'Seller Company Name', fSellerRep:'Authorized Representative (Seller)',
+    phBuyerNameTH:'Company Name Co., Ltd.', phRep:'Mr./Mrs./Ms. ...................',
+    phAddr:'No. ......... Street ......... Sub-district ......... District ......... Province ......... Postal Code .........',
+    phBuyerTitle:'Managing Director / Director', phSellerTitle:'Managing Director',
+    btnNextLand:'Next: Land Details →', btnBack:'← Back',
+    btnNextPurpose:'Next: Purpose →', btnNextPermit:'Next: Permits →',
+    btnNextContract:'Next: Contract →',
+    cardLand:'Land Details', cardLandSub:'Land Information',
+    fPlotNo:'Plot No.', fDeedNo:'Title Deed No.', fVolPage:'Volume / Page',
+    fLandLoc:'Land Location', fLandZone:'Zone / Area in Industrial Estate',
+    phLandLoc:'Sub-district ......... District ......... Province .........', phLandZone:'e.g. Zone A, Row 3, Plot 12',
+    landSizeTitle:'Land Size',
+    fRai:'Rai', fNgan:'Ngan', fSqwah:'Sq. Wah', uRai:'Rai', uNgan:'Ngan', uSqwah:'Sq.Wah',
+    fSqm:'Total Area (sq.m.)', fPriceRai:'Price per Rai (THB)', fPriceSqm:'Price per sq.m. (THB)',
+    phAuto:'Auto',
+    sumLandSize:'Land Size', sumPriceRai:'Price per Rai', sumSubtotal:'Land Price (before tax)',
+    sumTaxLabel:'Specific Business Tax 3.3%', sumGrandLabel:'💰 Grand Total (incl. tax)',
+    cardPayment:'Payment Terms', cardPaymentSub:'Payment Conditions',
+    fDeposit:'Reservation Deposit (THB)', fDownPct:'Down Payment (%)', fTransferDate:'Title Transfer Date',
+    fPayTerms:'Additional Payment Terms',
+    phPayTerms:'e.g. Balance 70% payable on title transfer date...',
+    cardPurpose:'Business Type & Purpose of Land Use', cardPurposeSub:'Business Type & Purpose',
+    fIndustry:'Industry Type', optSelectType:'— Select Industry —',
+    fFactoryType:'Factory Type (Factory Act)',
+    optSelect:'— Select —', optFactory1:'Factory Type 1 (Notify only)',
+    optFactory2:'Factory Type 2 (Prior notification)', optFactory3:'Factory Type 3 (License required)',
+    fProdDetail:'Production Details / Activities', phProdDetail:'e.g. Electronic component manufacturing, capacity X units/day...',
+    fCapacity:'Production Capacity', phCapacity:'e.g. 10,000 units/day', fWorkers:'Number of Workers',
+    cardTimeline:'Construction & Commencement Timeline', cardTimelineSub:'Construction & Commencement Schedule',
+    fConstructStart:'Construction Start Date', fConstructEnd:'Construction Completion Date',
+    fConstructMonths:'Construction Period (months)', fCommenceDate:'Commercial Commencement Date',
+    fLicenseDeadline:'Factory License Application Deadline', fUsePeriod:'Land Use Period (years)',
+    infoTimeline:'ℹ️ The Purchaser must commence construction within 12 months from the transfer date and commence commercial operations by the stipulated date, otherwise it constitutes a breach of contract.',
+    cardPermits:'Required Permits under Thai Law', cardPermitsSub:'Legal Permits & Licenses',
+    btnRefresh:'🔄 Refresh',
+    infoPermit:'ℹ️ Select an industry type in the "Purpose" tab to auto-populate the required permits.',
+    thPermitName:'Permit Name', thLaw:'Legal Reference', thAuthority:'Issuing Authority',
+    thType:'Type', thStatus:'Status',
+    fNewPermit:'Additional Permit Name', fNewAuth:'Authority',
+    phNewPermit:'Enter permit name...', phNewLaw:'Act / Regulation...', phNewAuth:'Department / Authority ...',
+    btnAddPermit:'+ Add',
+    exportReady:'📄 Ready to Generate Land Sales Contract',
+    btnPreview:'🔄 Update Preview', btnDocx:'📝 Download Word (.docx)',
+    btnEmail:'✉️ Email to Purchaser', btnPrint:'🖨️ Print',
+    cardPreview:'Contract Preview', cardPreviewSub:'ตัวอย่างสัญญา',
+    statusPending:'⏳ Pending', statusObtained:'✅ Obtained', statusApplied:'📋 Applied',
+    badgeRequired:'Required', badgeOptional:'Optional',
+    noPermits:'Select industry type to auto-populate permits.',
+    toastAdded:'Permit added.', toastFillPermit:'Please enter permit name.',
+    toastFillEmail:'Please enter purchaser email in the "Purchaser Info" tab.',
+    toastGenerating:'⏳ Generating Word file...', toastDone:'✅ Word file downloaded!',
+    toastPreview:'Contract preview updated.',
+    previewPlaceholder:'Please fill in all required fields then click "Update Preview".',
+    optionalSection:'Optional Permits (as applicable)',
+  }
+};
+
+let currentLang = localStorage.getItem('ag_lang') || 'th';
+
+function setLang(l) {
+  currentLang = l;
+  localStorage.setItem('ag_lang', l);
+  document.getElementById('btnTH').classList.toggle('active', l==='th');
+  document.getElementById('btnEN').classList.toggle('active', l==='en');
+  document.documentElement.lang = l;
+  applyLang();
+}
+
+function applyLang() {
+  const t = T[currentLang];
+  // text nodes
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+  // placeholders
+  document.querySelectorAll('[data-tp]').forEach(el => {
+    const key = el.getAttribute('data-tp');
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+  // re-render permits table (status options use lang strings)
+  renderPermits();
+}
+
+// ─── PERMITS DATABASE ────────────────────────────────────────────────────────
+const PERMIT_DB = {
+  common: [
+    { name:'ใบอนุญาตก่อสร้างอาคาร', law:'พ.ร.บ. ควบคุมอาคาร พ.ศ. 2522', auth:'องค์การบริหารส่วนท้องถิ่น / เทศบาล', type:'required' },
+    { name:'ใบอนุญาตตั้งประกอบกิจการในนิคมอุตสาหกรรม', law:'พ.ร.บ. นิคมอุตสาหกรรมแห่งประเทศไทย พ.ศ. 2522', auth:'การนิคมอุตสาหกรรมแห่งประเทศไทย (กนอ.) / นิคมเอกชน', type:'required' },
+    { name:'การจดทะเบียนแรงงาน / ขึ้นทะเบียนนายจ้าง', law:'พ.ร.บ. คุ้มครองแรงงาน พ.ศ. 2541', auth:'กรมสวัสดิการและคุ้มครองแรงงาน', type:'required' },
+    { name:'ใบอนุญาตประกอบกิจการน้ำบาดาล (ถ้าเจาะน้ำบาดาล)', law:'พ.ร.บ. น้ำบาดาล พ.ศ. 2520', auth:'กรมทรัพยากรน้ำบาดาล', type:'optional' },
+  ],
+  electronics: [
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535 (แก้ไข พ.ศ. 2562)', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+    { name:'ใบรับแจ้งการประกอบกิจการโรงงาน (ประเภทที่ 2)', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม / สำนักงานอุตสาหกรรมจังหวัด', type:'required' },
+    { name:'ใบอนุญาตนำเข้า/ส่งออกสินค้าควบคุม', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', auth:'กรมศุลกากร', type:'optional' },
+    { name:'การขออนุมัติจาก BOI (ถ้าต้องการสิทธิประโยชน์)', law:'พ.ร.บ. ส่งเสริมการลงทุน พ.ศ. 2520', auth:'สำนักงานคณะกรรมการส่งเสริมการลงทุน (BOI)', type:'optional' },
+  ],
+  automotive: [
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535 (แก้ไข พ.ศ. 2562)', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+    { name:'ใบอนุญาตจำหน่ายน้ำมันเชื้อเพลิง (ถ้ามี)', law:'พ.ร.บ. ควบคุมน้ำมันเชื้อเพลิง พ.ศ. 2542', auth:'กรมธุรกิจพลังงาน', type:'optional' },
+    { name:'การขออนุมัติจาก BOI', law:'พ.ร.บ. ส่งเสริมการลงทุน พ.ศ. 2520', auth:'BOI', type:'optional' },
+    { name:'ใบรับรองมาตรฐานผลิตภัณฑ์อุตสาหกรรม (มอก.)', law:'พ.ร.บ. มาตรฐานผลิตภัณฑ์อุตสาหกรรม พ.ศ. 2511', auth:'สำนักงานมาตรฐานผลิตภัณฑ์อุตสาหกรรม (สมอ.)', type:'optional' },
+  ],
+  food: [
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+    { name:'ใบอนุญาตสถานที่ผลิตอาหาร', law:'พ.ร.บ. อาหาร พ.ศ. 2522', auth:'สำนักงานคณะกรรมการอาหารและยา (อย.)', type:'required' },
+    { name:'เลขสถานที่ผลิตอาหาร (อย.)', law:'พ.ร.บ. อาหาร พ.ศ. 2522', auth:'สำนักงานคณะกรรมการอาหารและยา (อย.)', type:'required' },
+    { name:'ใบรับรอง GMP / HACCP', law:'ประกาศกระทรวงสาธารณสุข', auth:'กรมวิทยาศาสตร์การแพทย์ / หน่วยรับรอง', type:'required' },
+    { name:'ใบอนุญาตใช้น้ำจากแหล่งน้ำสาธารณะ', law:'พ.ร.บ. น้ำ พ.ศ. 2561', auth:'กรมชลประทาน', type:'optional' },
+  ],
+  chemical: [
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+    { name:'ใบอนุญาตครอบครองวัตถุอันตราย', law:'พ.ร.บ. วัตถุอันตราย พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+    { name:'รายงานการวิเคราะห์ผลกระทบสิ่งแวดล้อม (EIA)', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', auth:'สำนักงานนโยบายและแผนทรัพยากรธรรมชาติและสิ่งแวดล้อม (สผ.)', type:'required' },
+    { name:'ใบอนุญาตปล่อยน้ำทิ้งอุตสาหกรรม', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', auth:'กรมควบคุมมลพิษ', type:'required' },
+    { name:'ใบอนุญาตนำเข้าวัตถุอันตราย', law:'พ.ร.บ. วัตถุอันตราย พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'optional' },
+  ],
+  pharma: [
+    { name:'ใบอนุญาตผลิตยาแผนปัจจุบัน', law:'พ.ร.บ. ยา พ.ศ. 2510', auth:'สำนักงานคณะกรรมการอาหารและยา (อย.)', type:'required' },
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+    { name:'ใบรับรอง GMP (WHO PIC/S)', law:'ประกาศกระทรวงสาธารณสุข / WHO Guidelines', auth:'สำนักงานคณะกรรมการอาหารและยา (อย.)', type:'required' },
+    { name:'ใบอนุญาตครอบครองวัตถุออกฤทธิ์ / ยาเสพติด (ถ้าเกี่ยวข้อง)', law:'พ.ร.บ. วัตถุออกฤทธิ์ต่อจิตและประสาท / ยาเสพติด', auth:'สำนักงานคณะกรรมการอาหารและยา (อย.)', type:'optional' },
+  ],
+  metal: [
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+    { name:'รายงาน EIA (กรณีโรงงานขนาดใหญ่)', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', auth:'สผ.', type:'required' },
+    { name:'ใบอนุญาตใช้หม้อน้ำ / หม้อต้ม', law:'พ.ร.บ. โรงงาน พ.ศ. 2535 (กฎกระทรวง)', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+  ],
+  plastic: [
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+    { name:'ใบอนุญาตปล่อยน้ำทิ้ง', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', auth:'กรมควบคุมมลพิษ', type:'required' },
+  ],
+  textile: [
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+    { name:'ใบอนุญาตระบายน้ำทิ้ง', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', auth:'กรมควบคุมมลพิษ', type:'required' },
+  ],
+  logistics: [
+    { name:'ใบอนุญาตก่อสร้างคลังสินค้า/โกดัง', law:'พ.ร.บ. ควบคุมอาคาร พ.ศ. 2522', auth:'องค์การบริหารส่วนท้องถิ่น', type:'required' },
+    { name:'ใบอนุญาตประกอบกิจการคลังสินค้า (ถ้ารับฝากของ)', law:'พ.ร.บ. คลังสินค้า ไซโล และห้องเย็น พ.ศ. 2558', auth:'กรมการค้าภายใน', type:'optional' },
+    { name:'ใบอนุญาตรับขนของทางบก', law:'พ.ร.บ. การขนส่งทางบก พ.ศ. 2522', auth:'กรมการขนส่งทางบก', type:'optional' },
+  ],
+  packaging: [
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+  ],
+  agro: [
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+    { name:'ใบอนุญาตสถานที่ผลิตอาหาร / แปรรูปเกษตร', law:'พ.ร.บ. อาหาร พ.ศ. 2522 / พ.ร.บ. มาตรฐานสินค้าเกษตร', auth:'อย. / กรมวิชาการเกษตร', type:'required' },
+  ],
+  general: [
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+  ],
+};
+
+let permits = []; // active permit list
+
+// ─── TABS ────────────────────────────────────────────────────────────────────
+function switchTab(i) {
+  document.querySelectorAll('.tab').forEach((t,idx) => t.classList.toggle('active', idx===i));
+  document.querySelectorAll('.section-pane').forEach((p,idx) => p.classList.toggle('active', idx===i));
+  if(i===4) refreshPreview();
+}
+
+// ─── PRICE CALC ───────────────────────────────────────────────────────────────
+function calcPrice() {
+  const rai = parseFloat(document.getElementById('landRai').value)||0;
+  const ngan = parseFloat(document.getElementById('landNgan').value)||0;
+  const sqwah = parseFloat(document.getElementById('landSqwah').value)||0;
+  const pricePerRai = parseFloat(document.getElementById('pricePerRai').value)||0;
+  const totalRai = rai + ngan/4 + sqwah/400;
+  const totalSqm = totalRai * 1600;
+  document.getElementById('landSqm').value = totalSqm > 0 ? totalSqm.toLocaleString('th-TH',{maximumFractionDigits:2}) : '';
+  document.getElementById('pricePerSqm').value = totalSqm > 0 && pricePerRai > 0 ? (pricePerRai/1600).toLocaleString('th-TH',{maximumFractionDigits:2}) : '';
+  const total = totalRai * pricePerRai;
+  const tax = total * 0.033;
+  const grand = total + tax;
+  const fmt = n => n.toLocaleString('th-TH',{minimumFractionDigits:2, maximumFractionDigits:2});
+  document.getElementById('sumSize').textContent = totalRai > 0 ? `${rai} ไร่ ${ngan} งาน ${sqwah} ตร.วา (${fmt(totalSqm)} ตร.ม.)` : '—';
+  document.getElementById('sumRate').textContent = pricePerRai > 0 ? `${fmt(pricePerRai)} บาท/ไร่` : '—';
+  document.getElementById('sumTotal').textContent = total > 0 ? `${fmt(total)} บาท` : '—';
+  document.getElementById('sumTax').textContent = tax > 0 ? `${fmt(tax)} บาท` : '—';
+  document.getElementById('sumGrand').textContent = grand > 0 ? `${fmt(grand)} บาท` : '—';
+}
+
+// ─── PERMITS ─────────────────────────────────────────────────────────────────
+function autoPopulatePermits() {
+  const type = document.getElementById('industryType').value;
+  if(!type) return;
+  permits = [];
+  (PERMIT_DB.common||[]).forEach(p => permits.push({...p, status:'pending', custom:false}));
+  (PERMIT_DB[type]||[]).forEach(p => permits.push({...p, status:'pending', custom:false}));
+  renderPermits();
+  const selText = document.getElementById('industryType').options[document.getElementById('industryType').selectedIndex].text;
+  const t = T[currentLang];
+  document.getElementById('permitInfo').textContent =
+    currentLang==='th'
+      ? `✅ แสดง ${permits.length} ใบอนุญาตสำหรับอุตสาหกรรม: ${selText}`
+      : `✅ Showing ${permits.length} permits for industry: ${selText}`;
+  switchTab(3);
+}
+
+function renderPermits() {
+  const t = T[currentLang];
+  const tbody = document.getElementById('permitsBody');
+  if(!permits.length){
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:#aaa">${t.noPermits}</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = permits.map((p,i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td style="font-weight:600">${p.name}</td>
+      <td style="font-size:12px;color:#555">${p.law}</td>
+      <td style="font-size:12px">${p.auth}</td>
+      <td><span class="permit-badge ${p.type}">${p.type==='required'?t.badgeRequired:t.badgeOptional}</span></td>
+      <td>
+        <select class="permit-select" onchange="permits[${i}].status=this.value">
+          <option value="pending" ${p.status==='pending'?'selected':''}>${t.statusPending}</option>
+          <option value="obtained" ${p.status==='obtained'?'selected':''}>${t.statusObtained}</option>
+          <option value="applied" ${p.status==='applied'?'selected':''}>${t.statusApplied}</option>
+        </select>
+      </td>
+      <td><button class="btn btn-red" onclick="permits.splice(${i},1);renderPermits()">✕</button></td>
+    </tr>
+  `).join('');
+}
+
+function addCustomPermit() {
+  const t = T[currentLang];
+  const name = document.getElementById('newPermitName').value.trim();
+  const law  = document.getElementById('newPermitLaw').value.trim();
+  const auth = document.getElementById('newPermitAuth').value.trim();
+  if(!name){ toast(t.toastFillPermit); return; }
+  permits.push({ name, law, auth, type:'optional', status:'pending', custom:true });
+  renderPermits();
+  ['newPermitName','newPermitLaw','newPermitAuth'].forEach(id => document.getElementById(id).value='');
+  toast(t.toastAdded);
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function v(id){ return (document.getElementById(id)||{}).value||'' }
+function fmt(n){ return parseFloat(n||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2}) }
+function fmtDate(d){ if(!d) return '...............'; try{ const dt=new Date(d); return `${dt.getDate()} ${['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'][dt.getMonth()]} ${dt.getFullYear()+543}`; }catch(e){ return d; } }
+function totalRai(){ return (parseFloat(v('landRai'))||0)+(parseFloat(v('landNgan'))||0)/4+(parseFloat(v('landSqwah'))||0)/400 }
+function totalPrice(){ return totalRai()*(parseFloat(v('pricePerRai'))||0) }
+function grandTotal(){ return totalPrice()*1.033 }
+
+// ─── CONTRACT TEXT ────────────────────────────────────────────────────────────
+function buildContractHTML() {
+  const industryName = (() => { const s = document.getElementById('industryType'); return s.options[s.selectedIndex]?.text || '...................' })();
+  const rai=v('landRai')||'0', ngan=v('landNgan')||'0', sqwah=v('landSqwah')||'0';
+  const required = permits.filter(p=>p.type==='required');
+  const optional = permits.filter(p=>p.type==='optional');
+
+  return `
+    <h2>สัญญาซื้อขายที่ดินในนิคมอุตสาหกรรม</h2>
+    <h3>LAND PURCHASE AND SALE AGREEMENT IN INDUSTRIAL ESTATE</h3>
+    <div class="contract-no">เลขที่สัญญา: ${v('contractNo')||'..................'} &nbsp;|&nbsp; วันที่: ${fmtDate(v('contractDate'))}</div>
+
+    <div class="clause">
+      <div class="clause-title">ข้อ 1. คู่สัญญา</div>
+      <p>สัญญาฉบับนี้ทำขึ้น ณ ${v('contractPlace')||'นิคมอุตสาหกรรมเอเชียกรีน'} เมื่อวันที่ ${fmtDate(v('contractDate'))} ระหว่าง</p>
+      <div class="sub"><strong>ผู้ขาย:</strong> บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด ("Asiagreen Industrial Estate Co., Ltd.") โดย ${v('sellerRep')||'...................'} ในตำแหน่ง ${v('sellerRepTitle')||'...................'} ซึ่งต่อไปในสัญญานี้จะเรียกว่า <strong>"ผู้ขาย"</strong></div>
+      <div class="sub"><strong>ผู้ซื้อ:</strong> ${v('buyerNameTH')||'.....................'} (${v('buyerNameEN')||'.....................'}) เลขทะเบียนนิติบุคคล ${v('buyerRegNo')||'.....................'} ที่อยู่ ${v('buyerAddr')||'.....................'} โดย ${v('buyerRep')||'...................'} ในตำแหน่ง ${v('buyerRepTitle')||'...................'} ซึ่งต่อไปในสัญญานี้จะเรียกว่า <strong>"ผู้ซื้อ"</strong></div>
+      <p style="margin-top:8px">ทั้งสองฝ่ายได้ตกลงทำสัญญาซื้อขายที่ดินกัน โดยมีข้อความและเงื่อนไขดังต่อไปนี้</p>
+    </div>
+
+    <div class="clause">
+      <div class="clause-title">ข้อ 2. รายละเอียดทรัพย์สินที่ซื้อขาย</div>
+      <table>
+        <tr><th>รายการ</th><th>รายละเอียด</th></tr>
+        <tr><td>เลขที่แปลง</td><td>${v('plotNo')||'—'}</td></tr>
+        <tr><td>เลขที่โฉนดที่ดิน</td><td>${v('titleDeedNo')||'—'} เล่ม ${v('deedVolPage')||'—'}</td></tr>
+        <tr><td>ที่ตั้ง</td><td>${v('landLocation')||'—'}</td></tr>
+        <tr><td>โซน/บริเวณ</td><td>${v('landZone')||'—'}</td></tr>
+        <tr><td>ขนาดที่ดิน</td><td>${rai} ไร่ ${ngan} งาน ${sqwah} ตารางวา (ประมาณ ${(totalRai()*1600).toLocaleString('th-TH',{maximumFractionDigits:2})} ตารางเมตร)</td></tr>
+      </table>
+    </div>
+
+    <div class="clause">
+      <div class="clause-title">ข้อ 3. ราคาซื้อขายและการชำระเงิน</div>
+      <table>
+        <tr><th>รายการ</th><th>จำนวนเงิน (บาท)</th></tr>
+        <tr><td>ราคาที่ดิน (${fmt(v('pricePerRai'))} บาท/ไร่)</td><td>${fmt(totalPrice())}</td></tr>
+        <tr><td>ภาษีธุรกิจเฉพาะ 3.3%</td><td>${fmt(totalPrice()*0.033)}</td></tr>
+        <tr><td><strong>ราคารวมสุทธิ</strong></td><td><strong>${fmt(grandTotal())}</strong></td></tr>
+      </table>
+      <div class="sub" style="margin-top:8px">เงินจอง: ${fmt(v('depositAmt'))} บาท | เงินดาวน์: ${v('downPct')||'—'}% | วันโอนกรรมสิทธิ์: ${fmtDate(v('transferDate'))}</div>
+      ${v('paymentTerms') ? `<div class="sub">${v('paymentTerms')}</div>` : ''}
+    </div>
+
+    <div class="clause">
+      <div class="clause-title">ข้อ 4. การโอนกรรมสิทธิ์</div>
+      <p>ผู้ขายตกลงโอนกรรมสิทธิ์ที่ดินให้แก่ผู้ซื้อ ณ สำนักงานที่ดิน ภายในวันที่ ${fmtDate(v('transferDate'))} เมื่อผู้ซื้อชำระราคาที่ดินครบถ้วนแล้ว ค่าธรรมเนียมการโอนและภาษีอากรทั้งปวงให้เป็นไปตามที่กฎหมายกำหนด โดยผู้ซื้อและผู้ขายรับผิดชอบร่วมกันฝ่ายละครึ่ง เว้นแต่จะตกลงกันเป็นอย่างอื่น</p>
+    </div>
+
+    <div class="clause">
+      <div class="clause-title">ข้อ 5. วัตถุประสงค์การใช้ที่ดินและข้อผูกพันของผู้ซื้อ</div>
+      <div class="sub">5.1 ผู้ซื้อจะใช้ที่ดินเพื่อประกอบกิจการ <strong>${industryName}</strong> เท่านั้น หากประสงค์จะเปลี่ยนแปลงวัตถุประสงค์ต้องได้รับความยินยอมเป็นลายลักษณ์อักษรจากผู้ขายก่อน</div>
+      <div class="sub">5.2 ผู้ซื้อจะเริ่มก่อสร้างโรงงาน/อาคารภายในวันที่ <strong>${fmtDate(v('constructStart'))}</strong> และจะก่อสร้างแล้วเสร็จภายในวันที่ <strong>${fmtDate(v('constructEnd'))}</strong></div>
+      <div class="sub">5.3 ผู้ซื้อจะเริ่มดำเนินการเชิงพาณิชย์ (Commercial Commencement) ภายในวันที่ <strong>${fmtDate(v('commenceDate'))}</strong></div>
+      <div class="sub">5.4 ผู้ซื้อต้องปฏิบัติตามกฎระเบียบของนิคมอุตสาหกรรมเอเชียกรีนทุกประการ</div>
+      <div class="sub">5.5 ผู้ซื้อต้องรักษาสิ่งแวดล้อม ไม่ก่อให้เกิดมลภาวะเกินมาตรฐานที่กฎหมายกำหนด</div>
+      ${v('productionDetail') ? `<div class="sub">5.6 รายละเอียดการผลิต: ${v('productionDetail')}</div>` : ''}
+    </div>
+
+    <div class="clause">
+      <div class="clause-title">ข้อ 6. ใบอนุญาตและการปฏิบัติตามกฎหมาย</div>
+      <p>ผู้ซื้อมีหน้าที่รับผิดชอบในการขอรับใบอนุญาตและปฏิบัติตามกฎหมายที่เกี่ยวข้องทั้งหมด รวมถึงแต่ไม่จำกัดเพียงรายการดังต่อไปนี้:</p>
+      <table>
+        <tr><th>#</th><th>ใบอนุญาต</th><th>กฎหมายอ้างอิง</th><th>หน่วยงาน</th></tr>
+        ${required.map((p,i)=>`<tr><td>${i+1}</td><td>${p.name}</td><td>${p.law}</td><td>${p.auth}</td></tr>`).join('')}
+        ${optional.length ? `<tr><td colspan="4" style="background:#f9f9f9;font-weight:600;font-size:12px">${T[currentLang].optionalSection}</td></tr>` : ''}
+        ${optional.map((p,i)=>`<tr><td style="color:#888">${required.length+i+1}</td><td style="color:#666">${p.name}</td><td style="color:#666">${p.law}</td><td style="color:#666">${p.auth}</td></tr>`).join('')}
+      </table>
+      <div class="sub" style="margin-top:8px">ผู้ซื้อต้องยื่นขอใบอนุญาตประกอบกิจการโรงงาน (ถ้ามี) ไม่เกินวันที่ ${fmtDate(v('licenseDeadline'))}</div>
+    </div>
+
+    <div class="clause">
+      <div class="clause-title">ข้อ 7. การรับประกันของผู้ขาย</div>
+      <div class="sub">7.1 ผู้ขายรับประกันว่าที่ดินปลอดจากภาระผูกพัน จำนอง หรือสิทธิของบุคคลที่สาม</div>
+      <div class="sub">7.2 ผู้ขายรับประกันว่าที่ดินได้รับการพัฒนาโครงสร้างพื้นฐาน (ถนน ไฟฟ้า ประปา) ตามมาตรฐานของนิคมอุตสาหกรรม</div>
+      <div class="sub">7.3 ผู้ขายรับประกันว่าที่ดินตั้งอยู่ในเขตนิคมอุตสาหกรรมที่ได้รับอนุญาตโดยถูกต้องตามกฎหมาย</div>
+    </div>
+
+    <div class="clause">
+      <div class="clause-title">ข้อ 8. ความรับผิดด้านสิ่งแวดล้อมและความปลอดภัย</div>
+      <p>ผู้ซื้อรับผิดชอบต่อผลกระทบด้านสิ่งแวดล้อมที่เกิดจากการประกอบกิจการของตน และต้องปฏิบัติตามมาตรฐานการจัดการสิ่งแวดล้อมของนิคมอุตสาหกรรมและกฎหมายสิ่งแวดล้อมที่บังคับใช้</p>
+    </div>
+
+    <div class="clause">
+      <div class="clause-title">ข้อ 9. เหตุผิดนัดและการบอกเลิกสัญญา</div>
+      <div class="sub">9.1 หากผู้ซื้อผิดนัดชำระราคาที่ดิน ผู้ขายมีสิทธิบอกเลิกสัญญาและริบเงินจอง/เงินดาวน์ที่ชำระมาแล้ว</div>
+      <div class="sub">9.2 หากผู้ซื้อไม่เริ่มก่อสร้างหรือไม่เริ่มดำเนินการเชิงพาณิชย์ตามกำหนด ผู้ขายมีสิทธิเรียกค่าปรับในอัตราร้อยละ 0.1 ต่อวันของราคาที่ดิน</div>
+      <div class="sub">9.3 หากผู้ขายผิดสัญญา ผู้ซื้อมีสิทธิบอกเลิกสัญญาและเรียกเงินคืนพร้อมดอกเบี้ยร้อยละ 7.5 ต่อปี</div>
+    </div>
+
+    <div class="clause">
+      <div class="clause-title">ข้อ 10. กฎหมายที่ใช้บังคับและการระงับข้อพิพาท</div>
+      <p>สัญญาฉบับนี้อยู่ภายใต้บังคับกฎหมายแห่งราชอาณาจักรไทย หากมีข้อพิพาทเกิดขึ้น คู่สัญญาตกลงระงับข้อพิพาทโดยอนุญาโตตุลาการตามข้อบังคับของสถาบันอนุญาโตตุลาการ สำนักงานศาลยุติธรรม หรือนำคดีขึ้นสู่ศาลที่มีเขตอำนาจ</p>
+    </div>
+
+    <div class="clause">
+      <div class="clause-title">ข้อ 11. บทบัญญัติทั่วไป</div>
+      <div class="sub">11.1 สัญญาฉบับนี้ถือเป็นข้อตกลงทั้งหมดระหว่างคู่สัญญา ยกเลิกข้อตกลงก่อนหน้าทั้งหมด</div>
+      <div class="sub">11.2 การแก้ไขสัญญาต้องทำเป็นลายลักษณ์อักษรและลงนามโดยผู้มีอำนาจของทั้งสองฝ่าย</div>
+      <div class="sub">11.3 สัญญาฉบับนี้จัดทำสองฉบับ มีข้อความตรงกัน คู่สัญญาแต่ละฝ่ายถือไว้ฉบับละหนึ่งฉบับ</div>
+    </div>
+
+    <div class="sig-block">
+      <div>
+        <div class="sig-line"></div>
+        <div class="sig-label">ลงชื่อ ผู้ขาย / Seller's Signature</div>
+        <div class="sig-label" style="margin-top:4px">(${v('sellerRep')||'......................................'})</div>
+        <div class="sig-label">ตำแหน่ง ${v('sellerRepTitle')||'................................'}</div>
+        <div class="sig-label">บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด</div>
+        <div class="sig-label">วันที่ ${fmtDate(v('contractDate'))}</div>
+      </div>
+      <div>
+        <div class="sig-line"></div>
+        <div class="sig-label">ลงชื่อ ผู้ซื้อ / Purchaser's Signature</div>
+        <div class="sig-label" style="margin-top:4px">(${v('buyerRep')||'......................................'})</div>
+        <div class="sig-label">ตำแหน่ง ${v('buyerRepTitle')||'................................'}</div>
+        <div class="sig-label">${v('buyerNameTH')||'................................'}</div>
+        <div class="sig-label">วันที่ ${fmtDate(v('contractDate'))}</div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <div>
+        <div class="sig-line"></div>
+        <div class="sig-label">ลงชื่อ พยาน / Witness 1</div>
+      </div>
+      <div>
+        <div class="sig-line"></div>
+        <div class="sig-label">ลงชื่อ พยาน / Witness 2</div>
+      </div>
+    </div>
+  `;
+}
+
+function refreshPreview() {
+  document.getElementById('contractPreview').innerHTML = buildContractHTML();
+  toast(T[currentLang].toastPreview);
+}
+
+// ─── GENERATE DOCX ────────────────────────────────────────────────────────────
+async function generateDocx() {
+  if(typeof docx === 'undefined'){ toast('Loading Word library...'); return; }
+
+  const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
+    AlignmentType, HeadingLevel, BorderStyle, WidthType, ShadingType,
+    VerticalAlign, PageNumber, Header, Footer, TabStopType, TabStopPosition, PageBreak } = docx;
+
+  toast(T[currentLang].toastGenerating);
+
+  const industryName = (() => { const s = document.getElementById('industryType'); return s.options[s.selectedIndex]?.text || '—' })();
+  const rai=v('landRai')||'0', ngan=v('landNgan')||'0', sqwah=v('landSqwah')||'0';
+  const required = permits.filter(p=>p.type==='required');
+  const optional = permits.filter(p=>p.type==='optional');
+
+  const border = { style: BorderStyle.SINGLE, size: 1, color: 'AAAAAA' };
+  const borders = { top:border, bottom:border, left:border, right:border };
+  const headerBorder = { style: BorderStyle.SINGLE, size: 1, color: '2d8a4a' };
+  const headerBorders = { top:headerBorder, bottom:headerBorder, left:headerBorder, right:headerBorder };
+
+  function tblCell(text, header=false, width=4680, colspan=1) {
+    return new TableCell({
+      borders: header ? headerBorders : borders,
+      width: { size: width, type: WidthType.DXA },
+      shading: header ? { fill:'D5EDDC', type:ShadingType.CLEAR } : undefined,
+      margins: { top:60, bottom:60, left:120, right:120 },
+      columnSpan: colspan,
+      children: [new Paragraph({
+        children: [new TextRun({ text: String(text), bold: header, size: header?20:18, font:'TH Sarabun New' })]
+      })]
+    });
+  }
+
+  function para(text, opts={}) {
+    return new Paragraph({
+      alignment: opts.center ? AlignmentType.CENTER : AlignmentType.BOTH,
+      spacing: { before: opts.before||60, after: opts.after||60, line:360 },
+      indent: opts.indent ? { left: 720 } : undefined,
+      children: [new TextRun({
+        text, bold: opts.bold, size: opts.size||22, font:'TH Sarabun New',
+        color: opts.color, underline: opts.underline ? {} : undefined
+      })]
+    });
+  }
+
+  function clauseTitle(text) {
+    return new Paragraph({
+      spacing:{ before:200, after:80, line:360 },
+      children:[new TextRun({ text, bold:true, size:24, font:'TH Sarabun New', color:'1a5c2e' })]
+    });
+  }
+
+  function subpara(text) {
+    return new Paragraph({
+      indent: { left: 640, hanging: 0 },
+      spacing:{ before:40, after:40, line:360 },
+      children:[new TextRun({ text, size:22, font:'TH Sarabun New' })]
+    });
+  }
+
+  // TABLE: Land details
+  const landTable = new Table({
+    width: { size: 9360, type: WidthType.DXA },
+    columnWidths: [2880, 6480],
+    rows: [
+      new TableRow({ children:[tblCell('รายการ/Item',true,2880), tblCell('รายละเอียด/Details',true,6480)] }),
+      new TableRow({ children:[tblCell('เลขที่แปลง',false,2880), tblCell(v('plotNo')||'—',false,6480)] }),
+      new TableRow({ children:[tblCell('เลขที่โฉนด',false,2880), tblCell(`${v('titleDeedNo')||'—'} เล่ม ${v('deedVolPage')||'—'}`,false,6480)] }),
+      new TableRow({ children:[tblCell('ที่ตั้ง',false,2880), tblCell(v('landLocation')||'—',false,6480)] }),
+      new TableRow({ children:[tblCell('โซน/บริเวณ',false,2880), tblCell(v('landZone')||'—',false,6480)] }),
+      new TableRow({ children:[tblCell('ขนาดที่ดิน',false,2880), tblCell(`${rai} ไร่ ${ngan} งาน ${sqwah} ตารางวา (${(totalRai()*1600).toLocaleString('th-TH',{maximumFractionDigits:2})} ตร.ม.)`,false,6480)] }),
+    ]
+  });
+
+  // TABLE: Price
+  const priceTable = new Table({
+    width: { size: 9360, type: WidthType.DXA },
+    columnWidths: [5400, 3960],
+    rows: [
+      new TableRow({ children:[tblCell('รายการ',true,5400), tblCell('จำนวนเงิน (บาท)',true,3960)] }),
+      new TableRow({ children:[tblCell(`ราคาที่ดิน (${fmt(v('pricePerRai'))} บาท/ไร่)`,false,5400), tblCell(fmt(totalPrice()),false,3960)] }),
+      new TableRow({ children:[tblCell('ภาษีธุรกิจเฉพาะ 3.3%',false,5400), tblCell(fmt(totalPrice()*0.033),false,3960)] }),
+      new TableRow({ children:[tblCell('ราคารวมสุทธิ / Grand Total',true,5400), tblCell(fmt(grandTotal()),true,3960)] }),
+    ]
+  });
+
+  // TABLE: Permits
+  const permitRows = [
+    new TableRow({ children:[tblCell('#',true,480), tblCell('ใบอนุญาต',true,2400), tblCell('กฎหมายอ้างอิง',true,3480), tblCell('หน่วยงาน',true,3000)] }),
+    ...required.map((p,i) => new TableRow({ children:[tblCell(String(i+1),false,480), tblCell(p.name,false,2400), tblCell(p.law,false,3480), tblCell(p.auth,false,3000)] })),
+    ...optional.map((p,i) => new TableRow({ children:[tblCell(String(required.length+i+1),false,480), tblCell(p.name+' (เพิ่มเติม)',false,2400), tblCell(p.law,false,3480), tblCell(p.auth,false,3000)] })),
+  ];
+  const permitTable = new Table({ width:{ size:9360, type:WidthType.DXA }, columnWidths:[480,2400,3480,3000], rows:permitRows });
+
+  // Signature block
+  const sigTable = new Table({
+    width: { size: 9360, type: WidthType.DXA },
+    columnWidths: [4680, 4680],
+    rows: [
+      new TableRow({ children: [
+        new TableCell({ borders:{ top:border, bottom:border, left:border, right:border }, width:{size:4680,type:WidthType.DXA}, margins:{top:200,bottom:200,left:200,right:200},
+          children:[
+            para('ลงชื่อ ........................................', {center:true}),
+            para(`(${v('sellerRep')||'.....................................'})`  , {center:true}),
+            para(`ตำแหน่ง ${v('sellerRepTitle')||'.....................'}`, {center:true}),
+            para('บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด', {center:true, size:20}),
+            para(`วันที่ ${fmtDate(v('contractDate'))}`, {center:true}),
+          ]
+        }),
+        new TableCell({ borders:{ top:border, bottom:border, left:border, right:border }, width:{size:4680,type:WidthType.DXA}, margins:{top:200,bottom:200,left:200,right:200},
+          children:[
+            para('ลงชื่อ ........................................', {center:true}),
+            para(`(${v('buyerRep')||'.....................................'})`   , {center:true}),
+            para(`ตำแหน่ง ${v('buyerRepTitle')||'.....................'}`, {center:true}),
+            para(v('buyerNameTH')||'....................................', {center:true, size:20}),
+            para(`วันที่ ${fmtDate(v('contractDate'))}`, {center:true}),
+          ]
+        }),
+      ]})
+    ]
+  });
+
+  const doc = new Document({
+    styles: {
+      default: { document: { run: { font:'TH Sarabun New', size:22 } } }
+    },
+    sections: [{
+      properties: {
+        page: { size:{ width:11906, height:16838 }, margin:{ top:1134, right:1134, bottom:1134, left:1134 } }
+      },
+      headers: {
+        default: new Header({ children:[
+          new Paragraph({
+            border:{ bottom:{ style:BorderStyle.SINGLE, size:6, color:'1a5c2e', space:1 } },
+            spacing:{ after:100 }, alignment:AlignmentType.LEFT,
+            children:[
+              new TextRun({ text:'🏭 บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด  |  สัญญาซื้อขายที่ดินในนิคมอุตสาหกรรม', bold:true, size:18, font:'TH Sarabun New', color:'1a5c2e' }),
+              new TextRun({ text:`  เลขที่ ${v('contractNo')||'—'}`, size:18, font:'TH Sarabun New', color:'888888' }),
+            ]
+          })
+        ]})
+      },
+      footers: {
+        default: new Footer({ children:[
+          new Paragraph({
+            border:{ top:{ style:BorderStyle.SINGLE, size:6, color:'1a5c2e', space:1 } },
+            spacing:{ before:100 }, alignment:AlignmentType.CENTER,
+            children:[
+              new TextRun({ text:'Asiagreen Industrial Estate Co., Ltd.  —  สัญญาซื้อขายที่ดิน  —  หน้า ', size:16, font:'TH Sarabun New', color:'888888' }),
+              new TextRun({ children:[PageNumber.CURRENT], size:16, font:'TH Sarabun New', color:'888888' }),
+            ]
+          })
+        ]})
+      },
+      children: [
+        // Cover
+        para('สัญญาซื้อขายที่ดินในนิคมอุตสาหกรรม', {center:true, bold:true, size:36, before:400}),
+        para('LAND PURCHASE AND SALE AGREEMENT IN INDUSTRIAL ESTATE', {center:true, bold:true, size:26}),
+        para('บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด', {center:true, bold:true, size:26, color:'1a5c2e', before:120}),
+        para(`เลขที่สัญญา: ${v('contractNo')||'—'}     วันที่: ${fmtDate(v('contractDate'))}`, {center:true, size:22, before:80, after:200}),
+
+        // Separator
+        new Paragraph({ border:{bottom:{style:BorderStyle.SINGLE, size:8, color:'2d8a4a', space:4}}, spacing:{after:200}, children:[] }),
+
+        // Clause 1: Parties
+        clauseTitle('ข้อ 1. คู่สัญญา'),
+        para(`สัญญาฉบับนี้ทำขึ้น ณ ${v('contractPlace')||'นิคมอุตสาหกรรมเอเชียกรีน'} เมื่อวันที่ ${fmtDate(v('contractDate'))} ระหว่าง`),
+        subpara(`ผู้ขาย: บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด ("Asiagreen Industrial Estate Co., Ltd.") โดย ${v('sellerRep')||'.........................'} ตำแหน่ง ${v('sellerRepTitle')||'.........................'} ซึ่งต่อไปเรียกว่า "ผู้ขาย"`),
+        subpara(`ผู้ซื้อ: ${v('buyerNameTH')||'.....................................'} (${v('buyerNameEN')||'.....................................'}) เลขทะเบียน ${v('buyerRegNo')||'—'} โดย ${v('buyerRep')||'.........................'} ตำแหน่ง ${v('buyerRepTitle')||'.........................'} ซึ่งต่อไปเรียกว่า "ผู้ซื้อ"`),
+        para('ทั้งสองฝ่ายตกลงทำสัญญาโดยมีข้อความดังต่อไปนี้'),
+
+        // Clause 2: Land
+        clauseTitle('ข้อ 2. รายละเอียดทรัพย์สินที่ซื้อขาย'),
+        landTable,
+
+        // Clause 3: Price
+        clauseTitle('ข้อ 3. ราคาซื้อขายและการชำระเงิน'),
+        priceTable,
+        ...(v('paymentTerms') ? [para(`เงื่อนไขการชำระเงิน: ${v('paymentTerms')}`)] : []),
+
+        // Clause 4: Transfer
+        clauseTitle('ข้อ 4. การโอนกรรมสิทธิ์'),
+        para(`ผู้ขายตกลงโอนกรรมสิทธิ์ที่ดินให้แก่ผู้ซื้อ ณ สำนักงานที่ดิน ภายในวันที่ ${fmtDate(v('transferDate'))} เมื่อผู้ซื้อชำระราคาที่ดินครบถ้วนแล้ว ค่าธรรมเนียมการโอนและภาษีอากรทั้งปวงให้เป็นไปตามที่กฎหมายกำหนด`),
+
+        // Clause 5: Obligations
+        clauseTitle('ข้อ 5. วัตถุประสงค์การใช้ที่ดินและข้อผูกพันของผู้ซื้อ'),
+        subpara(`5.1 ผู้ซื้อจะใช้ที่ดินเพื่อประกอบกิจการ ${industryName} เท่านั้น หากประสงค์จะเปลี่ยนแปลงต้องได้รับความยินยอมเป็นลายลักษณ์อักษรจากผู้ขาย`),
+        subpara(`5.2 ผู้ซื้อจะเริ่มก่อสร้างภายในวันที่ ${fmtDate(v('constructStart'))} และก่อสร้างแล้วเสร็จภายในวันที่ ${fmtDate(v('constructEnd'))}`),
+        subpara(`5.3 ผู้ซื้อจะเริ่มดำเนินการเชิงพาณิชย์ (Commercial Commencement) ภายในวันที่ ${fmtDate(v('commenceDate'))}`),
+        subpara('5.4 ผู้ซื้อต้องปฏิบัติตามกฎระเบียบของนิคมอุตสาหกรรมเอเชียกรีนทุกประการ'),
+        subpara('5.5 ผู้ซื้อต้องรักษาสิ่งแวดล้อมและไม่ก่อให้เกิดมลภาวะเกินกว่ามาตรฐานที่กฎหมายกำหนด'),
+
+        // Clause 6: Permits
+        clauseTitle('ข้อ 6. ใบอนุญาตและการปฏิบัติตามกฎหมาย'),
+        para('ผู้ซื้อมีหน้าที่รับผิดชอบในการขอรับใบอนุญาตและปฏิบัติตามกฎหมายที่เกี่ยวข้องทั้งหมด รวมถึงแต่ไม่จำกัดเพียง:'),
+        permitTable,
+        subpara(`ผู้ซื้อต้องยื่นขอใบอนุญาตประกอบกิจการโรงงาน (ถ้ามี) ไม่เกินวันที่ ${fmtDate(v('licenseDeadline'))}`),
+
+        // Clause 7-11
+        clauseTitle('ข้อ 7. การรับประกันของผู้ขาย'),
+        subpara('7.1 ผู้ขายรับประกันว่าที่ดินปลอดจากภาระผูกพัน จำนอง หรือสิทธิของบุคคลที่สาม'),
+        subpara('7.2 ผู้ขายรับประกันว่าที่ดินได้รับการพัฒนาโครงสร้างพื้นฐาน (ถนน ไฟฟ้า ประปา) ตามมาตรฐาน'),
+        subpara('7.3 ผู้ขายรับประกันว่าที่ดินตั้งอยู่ในเขตนิคมอุตสาหกรรมที่ได้รับอนุญาตโดยถูกต้องตามกฎหมาย'),
+
+        clauseTitle('ข้อ 8. ความรับผิดด้านสิ่งแวดล้อมและความปลอดภัย'),
+        para('ผู้ซื้อรับผิดชอบต่อผลกระทบด้านสิ่งแวดล้อมที่เกิดจากการประกอบกิจการของตน และต้องปฏิบัติตามมาตรฐานการจัดการสิ่งแวดล้อมของนิคมและกฎหมายที่บังคับใช้ทุกประการ'),
+
+        clauseTitle('ข้อ 9. เหตุผิดนัดและการบอกเลิกสัญญา'),
+        subpara('9.1 หากผู้ซื้อผิดนัดชำระราคา ผู้ขายมีสิทธิบอกเลิกสัญญาและริบเงินจอง/เงินดาวน์ที่ชำระมาแล้ว'),
+        subpara('9.2 หากผู้ซื้อไม่เริ่มก่อสร้างหรือไม่เริ่มดำเนินการเชิงพาณิชย์ตามกำหนด ผู้ขายมีสิทธิเรียกค่าปรับร้อยละ 0.1 ต่อวันของราคาที่ดิน'),
+        subpara('9.3 หากผู้ขายผิดสัญญา ผู้ซื้อมีสิทธิบอกเลิกสัญญาและเรียกเงินคืนพร้อมดอกเบี้ยร้อยละ 7.5 ต่อปี'),
+
+        clauseTitle('ข้อ 10. กฎหมายที่ใช้บังคับและการระงับข้อพิพาท'),
+        para('สัญญาฉบับนี้อยู่ภายใต้บังคับกฎหมายแห่งราชอาณาจักรไทย หากมีข้อพิพาทให้ระงับโดยอนุญาโตตุลาการตามข้อบังคับของสถาบันอนุญาโตตุลาการ สำนักงานศาลยุติธรรม หรือศาลที่มีเขตอำนาจ'),
+
+        clauseTitle('ข้อ 11. บทบัญญัติทั่วไป'),
+        subpara('11.1 สัญญาฉบับนี้ถือเป็นข้อตกลงทั้งหมด ยกเลิกข้อตกลงก่อนหน้าทั้งหมด'),
+        subpara('11.2 การแก้ไขสัญญาต้องทำเป็นลายลักษณ์อักษรลงนามโดยผู้มีอำนาจของทั้งสองฝ่าย'),
+        subpara('11.3 สัญญาฉบับนี้จัดทำสองฉบับ มีข้อความตรงกัน คู่สัญญาแต่ละฝ่ายถือไว้ฉบับละหนึ่งฉบับ'),
+
+        // Signatures
+        new Paragraph({ spacing:{before:400, after:200}, children:[new TextRun({ text:'ลายมือชื่อคู่สัญญา / SIGNATURES', bold:true, size:26, font:'TH Sarabun New', color:'1a5c2e' })] }),
+        sigTable,
+
+        // Witness
+        new Paragraph({ spacing:{before:280, after:80}, children:[new TextRun({ text:'พยาน / WITNESSES', bold:true, size:22, font:'TH Sarabun New' })] }),
+        new Table({
+          width:{ size:9360, type:WidthType.DXA }, columnWidths:[4680,4680],
+          rows:[new TableRow({ children:[
+            new TableCell({ borders, width:{size:4680,type:WidthType.DXA}, margins:{top:200,bottom:200,left:200,right:200},
+              children:[para('ลงชื่อ ........................................', {center:true}), para('พยานที่ 1 / Witness 1', {center:true,size:18})] }),
+            new TableCell({ borders, width:{size:4680,type:WidthType.DXA}, margins:{top:200,bottom:200,left:200,right:200},
+              children:[para('ลงชื่อ ........................................', {center:true}), para('พยานที่ 2 / Witness 2', {center:true,size:18})] }),
+          ]})]
+        }),
+      ]
+    }]
+  });
+
+  try {
+    const blob = await Packer.toBlob(doc);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const fname = `สัญญา_${(v('buyerNameTH')||'ผู้ซื้อ').replace(/\s+/g,'_')}_${v('contractNo')||'001'}.docx`;
+    a.href = url; a.download = fname;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast(T[currentLang].toastDone);
+  } catch(e) {
+    console.error(e);
+    toast('เกิดข้อผิดพลาด: ' + e.message);
+  }
+}
+
+// ─── EMAIL ───────────────────────────────────────────────────────────────────
+function sendEmail() {
+  const email = v('buyerEmail');
+  const name  = v('buyerNameTH') || v('buyerNameEN');
+  if(!email){ toast(T[currentLang].toastFillEmail); return; }
+  const subject = encodeURIComponent(`สัญญาซื้อขายที่ดิน เลขที่ ${v('contractNo')||'—'} — Asiagreen Industrial Estate`);
+  const body = encodeURIComponent(
+    `เรียน ${name || 'ท่านผู้ซื้อ'},\n\n` +
+    `ขอส่งสัญญาซื้อขายที่ดินในนิคมอุตสาหกรรมเอเชียกรีน เลขที่ ${v('contractNo')||'—'} ลงวันที่ ${fmtDate(v('contractDate'))}\n\n` +
+    `รายละเอียดที่ดิน: แปลงที่ ${v('plotNo')||'—'} ขนาด ${v('landRai')||'0'} ไร่ ${v('landNgan')||'0'} งาน ${v('landSqwah')||'0'} ตร.วา\n` +
+    `ราคารวม: ${fmt(grandTotal())} บาท\n\n` +
+    `กรุณาตรวจสอบรายละเอียดและส่งกลับหากมีการแก้ไข\n\n` +
+    `ด้วยความนับถือ\nบริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด`
+  );
+  window.open(`mailto:${email}?subject=${subject}&body=${body}`);
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────────────────
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(el._t); el._t = setTimeout(()=>el.classList.remove('show'), 3000);
+}
+
+// ─── SAVE / LOAD ─────────────────────────────────────────────────────────────
+const FIELDS = ['contractNo','contractDate','contractPlace','buyerNameTH','buyerNameEN','buyerRegNo','buyerTaxId','buyerAddr','buyerRep','buyerRepTitle','buyerIdNo','buyerPhone','buyerEmail','sellerRep','sellerRepTitle','plotNo','titleDeedNo','deedVolPage','landLocation','landZone','landRai','landNgan','landSqwah','pricePerRai','depositAmt','downPct','transferDate','paymentTerms','industryType','factoryType','productionDetail','capacity','workers','constructStart','constructEnd','constructMonths','commenceDate','licenseDeadline','usePeriod'];
+
+function saveForm(){ const d={}; FIELDS.forEach(f=>d[f]=v(f)); d._permits=permits; localStorage.setItem('ag_contract',JSON.stringify(d)); }
+function loadForm(){
+  const raw=localStorage.getItem('ag_contract'); if(!raw) return;
+  const d=JSON.parse(raw);
+  FIELDS.forEach(f=>{ if(d[f] && document.getElementById(f)) document.getElementById(f).value=d[f]; });
+  if(d._permits){ permits=d._permits; renderPermits(); }
+  calcPrice();
+}
+
+FIELDS.forEach(f=>{ const el=document.getElementById(f); if(el) el.addEventListener('change',saveForm); });
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+document.getElementById('contractDate').value = new Date().toISOString().split('T')[0];
+loadForm();
+calcPrice();
+setLang(currentLang);
+</script>
+</body>
+</html>
