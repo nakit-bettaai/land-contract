@@ -610,70 +610,70 @@ function applyLang() {
 // ─── PERMITS DATABASE ────────────────────────────────────────────────────────
 const PERMIT_DB = {
   common: [
-    { name:'ใบอนุญาตก่อสร้างอาคาร', law:'พ.ร.บ. ควบคุมอาคาร พ.ศ. 2522', auth:'องค์การบริหารส่วนท้องถิ่น / เทศบาล', type:'required' },
-    { name:'ใบอนุญาตตั้งประกอบกิจการในนิคมอุตสาหกรรม', law:'พ.ร.บ. นิคมอุตสาหกรรมแห่งประเทศไทย พ.ศ. 2522', auth:'การนิคมอุตสาหกรรมแห่งประเทศไทย (กนอ.) / นิคมเอกชน', type:'required' },
-    { name:'การจดทะเบียนแรงงาน / ขึ้นทะเบียนนายจ้าง', law:'พ.ร.บ. คุ้มครองแรงงาน พ.ศ. 2541', auth:'กรมสวัสดิการและคุ้มครองแรงงาน', type:'required' },
-    { name:'ใบอนุญาตประกอบกิจการน้ำบาดาล (ถ้าเจาะน้ำบาดาล)', law:'พ.ร.บ. น้ำบาดาล พ.ศ. 2520', auth:'กรมทรัพยากรน้ำบาดาล', type:'optional' },
+    { name:'ใบอนุญาตก่อสร้างอาคาร', nameEN:'Building Construction Permit', law:'พ.ร.บ. ควบคุมอาคาร พ.ศ. 2522', lawEN:'Building Control Act B.E. 2522', auth:'องค์การบริหารส่วนท้องถิ่น / เทศบาล', authEN:'Local Administrative Organization / Municipality', type:'required' },
+    { name:'ใบอนุญาตตั้งประกอบกิจการในนิคมอุตสาหกรรม', nameEN:'Industrial Estate Operating License', law:'พ.ร.บ. นิคมอุตสาหกรรมแห่งประเทศไทย พ.ศ. 2522', lawEN:'Industrial Estate Authority of Thailand Act B.E. 2522', auth:'การนิคมอุตสาหกรรมแห่งประเทศไทย (กนอ.) / นิคมเอกชน', authEN:'Industrial Estate Authority of Thailand (IEAT) / Private Estate', type:'required' },
+    { name:'การจดทะเบียนแรงงาน / ขึ้นทะเบียนนายจ้าง', nameEN:'Labour Registration / Employer Registration', law:'พ.ร.บ. คุ้มครองแรงงาน พ.ศ. 2541', lawEN:'Labour Protection Act B.E. 2541', auth:'กรมสวัสดิการและคุ้มครองแรงงาน', authEN:'Department of Labour Protection and Welfare', type:'required' },
+    { name:'ใบอนุญาตประกอบกิจการน้ำบาดาล (ถ้าเจาะน้ำบาดาล)', nameEN:'Groundwater Business License (if drilling)', law:'พ.ร.บ. น้ำบาดาล พ.ศ. 2520', lawEN:'Groundwater Act B.E. 2520', auth:'กรมทรัพยากรน้ำบาดาล', authEN:'Department of Groundwater Resources', type:'optional' },
   ],
   electronics: [
-    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535 (แก้ไข พ.ศ. 2562)', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
-    { name:'ใบรับแจ้งการประกอบกิจการโรงงาน (ประเภทที่ 2)', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม / สำนักงานอุตสาหกรรมจังหวัด', type:'required' },
-    { name:'ใบอนุญาตนำเข้า/ส่งออกสินค้าควบคุม', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', auth:'กรมศุลกากร', type:'optional' },
-    { name:'การขออนุมัติจาก BOI (ถ้าต้องการสิทธิประโยชน์)', law:'พ.ร.บ. ส่งเสริมการลงทุน พ.ศ. 2520', auth:'สำนักงานคณะกรรมการส่งเสริมการลงทุน (BOI)', type:'optional' },
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', nameEN:'Factory Operating License', law:'พ.ร.บ. โรงงาน พ.ศ. 2535 (แก้ไข พ.ศ. 2562)', lawEN:'Factory Act B.E. 2535 (amended B.E. 2562)', auth:'กรมโรงงานอุตสาหกรรม', authEN:'Department of Industrial Works (DIW)', type:'required' },
+    { name:'ใบรับแจ้งการประกอบกิจการโรงงาน (ประเภทที่ 2)', nameEN:'Factory Notification Certificate (Type 2)', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', lawEN:'Factory Act B.E. 2535', auth:'กรมโรงงานอุตสาหกรรม / สำนักงานอุตสาหกรรมจังหวัด', authEN:'DIW / Provincial Industry Office', type:'required' },
+    { name:'ใบอนุญาตนำเข้า/ส่งออกสินค้าควบคุม', nameEN:'Controlled Goods Import/Export License', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', lawEN:'Enhancement and Conservation of National Environmental Quality Act B.E. 2535', auth:'กรมศุลกากร', authEN:'Customs Department', type:'optional' },
+    { name:'การขออนุมัติจาก BOI (ถ้าต้องการสิทธิประโยชน์)', nameEN:'BOI Approval (for investment privileges)', law:'พ.ร.บ. ส่งเสริมการลงทุน พ.ศ. 2520', lawEN:'Investment Promotion Act B.E. 2520', auth:'สำนักงานคณะกรรมการส่งเสริมการลงทุน (BOI)', authEN:'Board of Investment (BOI)', type:'optional' },
   ],
   automotive: [
-    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535 (แก้ไข พ.ศ. 2562)', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
-    { name:'ใบอนุญาตจำหน่ายน้ำมันเชื้อเพลิง (ถ้ามี)', law:'พ.ร.บ. ควบคุมน้ำมันเชื้อเพลิง พ.ศ. 2542', auth:'กรมธุรกิจพลังงาน', type:'optional' },
-    { name:'การขออนุมัติจาก BOI', law:'พ.ร.บ. ส่งเสริมการลงทุน พ.ศ. 2520', auth:'BOI', type:'optional' },
-    { name:'ใบรับรองมาตรฐานผลิตภัณฑ์อุตสาหกรรม (มอก.)', law:'พ.ร.บ. มาตรฐานผลิตภัณฑ์อุตสาหกรรม พ.ศ. 2511', auth:'สำนักงานมาตรฐานผลิตภัณฑ์อุตสาหกรรม (สมอ.)', type:'optional' },
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', nameEN:'Factory Operating License', law:'พ.ร.บ. โรงงาน พ.ศ. 2535 (แก้ไข พ.ศ. 2562)', lawEN:'Factory Act B.E. 2535 (amended B.E. 2562)', auth:'กรมโรงงานอุตสาหกรรม', authEN:'Department of Industrial Works (DIW)', type:'required' },
+    { name:'ใบอนุญาตจำหน่ายน้ำมันเชื้อเพลิง (ถ้ามี)', nameEN:'Fuel Sales License (if applicable)', law:'พ.ร.บ. ควบคุมน้ำมันเชื้อเพลิง พ.ศ. 2542', lawEN:'Fuel Control Act B.E. 2542', auth:'กรมธุรกิจพลังงาน', authEN:'Department of Energy Business', type:'optional' },
+    { name:'การขออนุมัติจาก BOI', nameEN:'BOI Approval', law:'พ.ร.บ. ส่งเสริมการลงทุน พ.ศ. 2520', lawEN:'Investment Promotion Act B.E. 2520', auth:'BOI', authEN:'Board of Investment (BOI)', type:'optional' },
+    { name:'ใบรับรองมาตรฐานผลิตภัณฑ์อุตสาหกรรม (มอก.)', nameEN:'Thai Industrial Standard Certificate (TIS/TISI)', law:'พ.ร.บ. มาตรฐานผลิตภัณฑ์อุตสาหกรรม พ.ศ. 2511', lawEN:'Industrial Product Standards Act B.E. 2511', auth:'สำนักงานมาตรฐานผลิตภัณฑ์อุตสาหกรรม (สมอ.)', authEN:'Thai Industrial Standards Institute (TISI)', type:'optional' },
   ],
   food: [
-    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
-    { name:'ใบอนุญาตสถานที่ผลิตอาหาร', law:'พ.ร.บ. อาหาร พ.ศ. 2522', auth:'สำนักงานคณะกรรมการอาหารและยา (อย.)', type:'required' },
-    { name:'เลขสถานที่ผลิตอาหาร (อย.)', law:'พ.ร.บ. อาหาร พ.ศ. 2522', auth:'สำนักงานคณะกรรมการอาหารและยา (อย.)', type:'required' },
-    { name:'ใบรับรอง GMP / HACCP', law:'ประกาศกระทรวงสาธารณสุข', auth:'กรมวิทยาศาสตร์การแพทย์ / หน่วยรับรอง', type:'required' },
-    { name:'ใบอนุญาตใช้น้ำจากแหล่งน้ำสาธารณะ', law:'พ.ร.บ. น้ำ พ.ศ. 2561', auth:'กรมชลประทาน', type:'optional' },
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', nameEN:'Factory Operating License', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', lawEN:'Factory Act B.E. 2535', auth:'กรมโรงงานอุตสาหกรรม', authEN:'Department of Industrial Works (DIW)', type:'required' },
+    { name:'ใบอนุญาตสถานที่ผลิตอาหาร', nameEN:'Food Production Facility License', law:'พ.ร.บ. อาหาร พ.ศ. 2522', lawEN:'Food Act B.E. 2522', auth:'สำนักงานคณะกรรมการอาหารและยา (อย.)', authEN:'Food and Drug Administration (FDA)', type:'required' },
+    { name:'เลขสถานที่ผลิตอาหาร (อย.)', nameEN:'FDA Food Production Site Registration Number', law:'พ.ร.บ. อาหาร พ.ศ. 2522', lawEN:'Food Act B.E. 2522', auth:'สำนักงานคณะกรรมการอาหารและยา (อย.)', authEN:'Food and Drug Administration (FDA)', type:'required' },
+    { name:'ใบรับรอง GMP / HACCP', nameEN:'GMP / HACCP Certification', law:'ประกาศกระทรวงสาธารณสุข', lawEN:'Ministry of Public Health Notification', auth:'กรมวิทยาศาสตร์การแพทย์ / หน่วยรับรอง', authEN:'Department of Medical Sciences / Certification Body', type:'required' },
+    { name:'ใบอนุญาตใช้น้ำจากแหล่งน้ำสาธารณะ', nameEN:'Public Water Source Usage License', law:'พ.ร.บ. น้ำ พ.ศ. 2561', lawEN:'Water Resources Act B.E. 2561', auth:'กรมชลประทาน', authEN:'Royal Irrigation Department', type:'optional' },
   ],
   chemical: [
-    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
-    { name:'ใบอนุญาตครอบครองวัตถุอันตราย', law:'พ.ร.บ. วัตถุอันตราย พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
-    { name:'รายงานการวิเคราะห์ผลกระทบสิ่งแวดล้อม (EIA)', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', auth:'สำนักงานนโยบายและแผนทรัพยากรธรรมชาติและสิ่งแวดล้อม (สผ.)', type:'required' },
-    { name:'ใบอนุญาตปล่อยน้ำทิ้งอุตสาหกรรม', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', auth:'กรมควบคุมมลพิษ', type:'required' },
-    { name:'ใบอนุญาตนำเข้าวัตถุอันตราย', law:'พ.ร.บ. วัตถุอันตราย พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'optional' },
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', nameEN:'Factory Operating License', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', lawEN:'Factory Act B.E. 2535', auth:'กรมโรงงานอุตสาหกรรม', authEN:'Department of Industrial Works (DIW)', type:'required' },
+    { name:'ใบอนุญาตครอบครองวัตถุอันตราย', nameEN:'Hazardous Substance Possession License', law:'พ.ร.บ. วัตถุอันตราย พ.ศ. 2535', lawEN:'Hazardous Substance Act B.E. 2535', auth:'กรมโรงงานอุตสาหกรรม', authEN:'Department of Industrial Works (DIW)', type:'required' },
+    { name:'รายงานการวิเคราะห์ผลกระทบสิ่งแวดล้อม (EIA)', nameEN:'Environmental Impact Assessment Report (EIA)', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', lawEN:'Enhancement and Conservation of National Environmental Quality Act B.E. 2535', auth:'สำนักงานนโยบายและแผนทรัพยากรธรรมชาติและสิ่งแวดล้อม (สผ.)', authEN:'Office of Natural Resources and Environmental Policy and Planning (ONEP)', type:'required' },
+    { name:'ใบอนุญาตปล่อยน้ำทิ้งอุตสาหกรรม', nameEN:'Industrial Wastewater Discharge License', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', lawEN:'Enhancement and Conservation of National Environmental Quality Act B.E. 2535', auth:'กรมควบคุมมลพิษ', authEN:'Pollution Control Department', type:'required' },
+    { name:'ใบอนุญาตนำเข้าวัตถุอันตราย', nameEN:'Hazardous Substance Import License', law:'พ.ร.บ. วัตถุอันตราย พ.ศ. 2535', lawEN:'Hazardous Substance Act B.E. 2535', auth:'กรมโรงงานอุตสาหกรรม', authEN:'Department of Industrial Works (DIW)', type:'optional' },
   ],
   pharma: [
-    { name:'ใบอนุญาตผลิตยาแผนปัจจุบัน', law:'พ.ร.บ. ยา พ.ศ. 2510', auth:'สำนักงานคณะกรรมการอาหารและยา (อย.)', type:'required' },
-    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
-    { name:'ใบรับรอง GMP (WHO PIC/S)', law:'ประกาศกระทรวงสาธารณสุข / WHO Guidelines', auth:'สำนักงานคณะกรรมการอาหารและยา (อย.)', type:'required' },
-    { name:'ใบอนุญาตครอบครองวัตถุออกฤทธิ์ / ยาเสพติด (ถ้าเกี่ยวข้อง)', law:'พ.ร.บ. วัตถุออกฤทธิ์ต่อจิตและประสาท / ยาเสพติด', auth:'สำนักงานคณะกรรมการอาหารและยา (อย.)', type:'optional' },
+    { name:'ใบอนุญาตผลิตยาแผนปัจจุบัน', nameEN:'Modern Drug Manufacturing License', law:'พ.ร.บ. ยา พ.ศ. 2510', lawEN:'Drug Act B.E. 2510', auth:'สำนักงานคณะกรรมการอาหารและยา (อย.)', authEN:'Food and Drug Administration (FDA)', type:'required' },
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', nameEN:'Factory Operating License', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', lawEN:'Factory Act B.E. 2535', auth:'กรมโรงงานอุตสาหกรรม', authEN:'Department of Industrial Works (DIW)', type:'required' },
+    { name:'ใบรับรอง GMP (WHO PIC/S)', nameEN:'GMP Certification (WHO PIC/S)', law:'ประกาศกระทรวงสาธารณสุข / WHO Guidelines', lawEN:'Ministry of Public Health Notification / WHO Guidelines', auth:'สำนักงานคณะกรรมการอาหารและยา (อย.)', authEN:'Food and Drug Administration (FDA)', type:'required' },
+    { name:'ใบอนุญาตครอบครองวัตถุออกฤทธิ์ / ยาเสพติด (ถ้าเกี่ยวข้อง)', nameEN:'Psychotropic Substance / Narcotic Possession License (if applicable)', law:'พ.ร.บ. วัตถุออกฤทธิ์ต่อจิตและประสาท / ยาเสพติด', lawEN:'Psychotropic Substances Act / Narcotics Act', auth:'สำนักงานคณะกรรมการอาหารและยา (อย.)', authEN:'Food and Drug Administration (FDA)', type:'optional' },
   ],
   metal: [
-    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
-    { name:'รายงาน EIA (กรณีโรงงานขนาดใหญ่)', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', auth:'สผ.', type:'required' },
-    { name:'ใบอนุญาตใช้หม้อน้ำ / หม้อต้ม', law:'พ.ร.บ. โรงงาน พ.ศ. 2535 (กฎกระทรวง)', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', nameEN:'Factory Operating License', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', lawEN:'Factory Act B.E. 2535', auth:'กรมโรงงานอุตสาหกรรม', authEN:'Department of Industrial Works (DIW)', type:'required' },
+    { name:'รายงาน EIA (กรณีโรงงานขนาดใหญ่)', nameEN:'EIA Report (for large-scale factories)', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', lawEN:'Enhancement and Conservation of National Environmental Quality Act B.E. 2535', auth:'สผ.', authEN:'Office of Natural Resources and Environmental Policy and Planning (ONEP)', type:'required' },
+    { name:'ใบอนุญาตใช้หม้อน้ำ / หม้อต้ม', nameEN:'Boiler / Pressure Vessel License', law:'พ.ร.บ. โรงงาน พ.ศ. 2535 (กฎกระทรวง)', lawEN:'Factory Act B.E. 2535 (Ministerial Regulation)', auth:'กรมโรงงานอุตสาหกรรม', authEN:'Department of Industrial Works (DIW)', type:'required' },
   ],
   plastic: [
-    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
-    { name:'ใบอนุญาตปล่อยน้ำทิ้ง', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', auth:'กรมควบคุมมลพิษ', type:'required' },
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', nameEN:'Factory Operating License', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', lawEN:'Factory Act B.E. 2535', auth:'กรมโรงงานอุตสาหกรรม', authEN:'Department of Industrial Works (DIW)', type:'required' },
+    { name:'ใบอนุญาตปล่อยน้ำทิ้ง', nameEN:'Wastewater Discharge License', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', lawEN:'Enhancement and Conservation of National Environmental Quality Act B.E. 2535', auth:'กรมควบคุมมลพิษ', authEN:'Pollution Control Department', type:'required' },
   ],
   textile: [
-    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
-    { name:'ใบอนุญาตระบายน้ำทิ้ง', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', auth:'กรมควบคุมมลพิษ', type:'required' },
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', nameEN:'Factory Operating License', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', lawEN:'Factory Act B.E. 2535', auth:'กรมโรงงานอุตสาหกรรม', authEN:'Department of Industrial Works (DIW)', type:'required' },
+    { name:'ใบอนุญาตระบายน้ำทิ้ง', nameEN:'Wastewater Discharge License', law:'พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม พ.ศ. 2535', lawEN:'Enhancement and Conservation of National Environmental Quality Act B.E. 2535', auth:'กรมควบคุมมลพิษ', authEN:'Pollution Control Department', type:'required' },
   ],
   logistics: [
-    { name:'ใบอนุญาตก่อสร้างคลังสินค้า/โกดัง', law:'พ.ร.บ. ควบคุมอาคาร พ.ศ. 2522', auth:'องค์การบริหารส่วนท้องถิ่น', type:'required' },
-    { name:'ใบอนุญาตประกอบกิจการคลังสินค้า (ถ้ารับฝากของ)', law:'พ.ร.บ. คลังสินค้า ไซโล และห้องเย็น พ.ศ. 2558', auth:'กรมการค้าภายใน', type:'optional' },
-    { name:'ใบอนุญาตรับขนของทางบก', law:'พ.ร.บ. การขนส่งทางบก พ.ศ. 2522', auth:'กรมการขนส่งทางบก', type:'optional' },
+    { name:'ใบอนุญาตก่อสร้างคลังสินค้า/โกดัง', nameEN:'Warehouse/Storage Construction Permit', law:'พ.ร.บ. ควบคุมอาคาร พ.ศ. 2522', lawEN:'Building Control Act B.E. 2522', auth:'องค์การบริหารส่วนท้องถิ่น', authEN:'Local Administrative Organization', type:'required' },
+    { name:'ใบอนุญาตประกอบกิจการคลังสินค้า (ถ้ารับฝากของ)', nameEN:'Warehouse Business License (if storing goods for others)', law:'พ.ร.บ. คลังสินค้า ไซโล และห้องเย็น พ.ศ. 2558', lawEN:'Warehouse, Silo and Cold Storage Act B.E. 2558', auth:'กรมการค้าภายใน', authEN:'Department of Internal Trade', type:'optional' },
+    { name:'ใบอนุญาตรับขนของทางบก', nameEN:'Land Transport Carrier License', law:'พ.ร.บ. การขนส่งทางบก พ.ศ. 2522', lawEN:'Land Transport Act B.E. 2522', auth:'กรมการขนส่งทางบก', authEN:'Department of Land Transport', type:'optional' },
   ],
   packaging: [
-    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', nameEN:'Factory Operating License', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', lawEN:'Factory Act B.E. 2535', auth:'กรมโรงงานอุตสาหกรรม', authEN:'Department of Industrial Works (DIW)', type:'required' },
   ],
   agro: [
-    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
-    { name:'ใบอนุญาตสถานที่ผลิตอาหาร / แปรรูปเกษตร', law:'พ.ร.บ. อาหาร พ.ศ. 2522 / พ.ร.บ. มาตรฐานสินค้าเกษตร', auth:'อย. / กรมวิชาการเกษตร', type:'required' },
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', nameEN:'Factory Operating License', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', lawEN:'Factory Act B.E. 2535', auth:'กรมโรงงานอุตสาหกรรม', authEN:'Department of Industrial Works (DIW)', type:'required' },
+    { name:'ใบอนุญาตสถานที่ผลิตอาหาร / แปรรูปเกษตร', nameEN:'Food Production / Agro-Processing Facility License', law:'พ.ร.บ. อาหาร พ.ศ. 2522 / พ.ร.บ. มาตรฐานสินค้าเกษตร', lawEN:'Food Act B.E. 2522 / Agricultural Standards Act', auth:'อย. / กรมวิชาการเกษตร', authEN:'FDA / Department of Agriculture', type:'required' },
   ],
   general: [
-    { name:'ใบอนุญาตประกอบกิจการโรงงาน', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', auth:'กรมโรงงานอุตสาหกรรม', type:'required' },
+    { name:'ใบอนุญาตประกอบกิจการโรงงาน', nameEN:'Factory Operating License', law:'พ.ร.บ. โรงงาน พ.ศ. 2535', lawEN:'Factory Act B.E. 2535', auth:'กรมโรงงานอุตสาหกรรม', authEN:'Department of Industrial Works (DIW)', type:'required' },
   ],
 };
 
@@ -734,9 +734,9 @@ function renderPermits() {
   tbody.innerHTML = permits.map((p,i) => `
     <tr>
       <td>${i+1}</td>
-      <td style="font-weight:600">${p.name}</td>
-      <td style="font-size:12px;color:#555">${p.law}</td>
-      <td style="font-size:12px">${p.auth}</td>
+      <td style="font-weight:600">${p.name}${p.nameEN?`<div style="font-weight:400;font-size:11px;color:#1565c0;font-style:italic;margin-top:2px">${p.nameEN}</div>`:''}</td>
+      <td style="font-size:12px;color:#555">${p.law}${p.lawEN?`<div style="font-size:11px;color:#1565c0;font-style:italic;margin-top:2px">${p.lawEN}</div>`:''}</td>
+      <td style="font-size:12px">${p.auth}${p.authEN?`<div style="font-size:11px;color:#1565c0;font-style:italic;margin-top:2px">${p.authEN}</div>`:''}</td>
       <td><span class="permit-badge ${p.type}">${p.type==='required'?t.badgeRequired:t.badgeOptional}</span></td>
       <td>
         <select class="permit-select" onchange="permits[${i}].status=this.value">
@@ -849,9 +849,9 @@ function buildContractHTML() {
       ${enp('The Purchaser is solely responsible for obtaining all required permits and complying with all applicable laws, including but not limited to the following:')}
       <table>
         <tr><th>#</th><th>ใบอนุญาต / Permit</th><th>กฎหมายอ้างอิง / Legal Reference</th><th>หน่วยงาน / Authority</th></tr>
-        ${required.map((p,i)=>`<tr><td>${i+1}</td><td>${p.name}</td><td>${p.law}</td><td>${p.auth}</td></tr>`).join('')}
+        ${required.map((p,i)=>`<tr><td>${i+1}</td><td>${p.name}${p.nameEN?`<div style="font-size:11px;color:#1565c0;font-style:italic">${p.nameEN}</div>`:''}</td><td>${p.law}${p.lawEN?`<div style="font-size:11px;color:#1565c0;font-style:italic">${p.lawEN}</div>`:''}</td><td>${p.auth}${p.authEN?`<div style="font-size:11px;color:#1565c0;font-style:italic">${p.authEN}</div>`:''}</td></tr>`).join('')}
         ${optional.length ? `<tr><td colspan="4" style="background:#f9f9f9;font-weight:600;font-size:12px">ใบอนุญาตเพิ่มเติม / Additional Permits (Optional)</td></tr>` : ''}
-        ${optional.map((p,i)=>`<tr><td style="color:#888">${required.length+i+1}</td><td style="color:#666">${p.name}</td><td style="color:#666">${p.law}</td><td style="color:#666">${p.auth}</td></tr>`).join('')}
+        ${optional.map((p,i)=>`<tr><td style="color:#888">${required.length+i+1}</td><td style="color:#666">${p.name}${p.nameEN?`<div style="font-size:11px;color:#1565c0;font-style:italic">${p.nameEN}</div>`:''}</td><td style="color:#666">${p.law}${p.lawEN?`<div style="font-size:11px;color:#1565c0;font-style:italic">${p.lawEN}</div>`:''}</td><td style="color:#666">${p.auth}${p.authEN?`<div style="font-size:11px;color:#1565c0;font-style:italic">${p.authEN}</div>`:''}</td></tr>`).join('')}
       </table>
       <div class="sub" style="margin-top:8px">ผู้ซื้อต้องยื่นขอใบอนุญาตประกอบกิจการโรงงาน (ถ้ามี) ไม่เกินวันที่ ${biDate(v('licenseDeadline'))}</div>
       ${en(`The Purchaser must submit the factory operating license application (if applicable) no later than ${fmtDateEN(v('licenseDeadline'))}.`)}
@@ -1045,8 +1045,8 @@ async function generateDocx() {
   // TABLE: Permits
   const permitRows = [
     new TableRow({ children:[tblCell('#',true,480), tblCell('ใบอนุญาต / Permit',true,2400), tblCell('กฎหมายอ้างอิง / Legal Reference',true,3480), tblCell('หน่วยงาน / Authority',true,3000)] }),
-    ...required.map((p,i) => new TableRow({ children:[tblCell(String(i+1),false,480), tblCell(p.name,false,2400), tblCell(p.law,false,3480), tblCell(p.auth,false,3000)] })),
-    ...optional.map((p,i) => new TableRow({ children:[tblCell(String(required.length+i+1),false,480), tblCell(p.name+' (เพิ่มเติม/Additional)',false,2400), tblCell(p.law,false,3480), tblCell(p.auth,false,3000)] })),
+    ...required.map((p,i) => new TableRow({ children:[tblCell(String(i+1),false,480), tblCell(p.name+(p.nameEN?'\n'+p.nameEN:''),false,2400), tblCell(p.law+(p.lawEN?'\n'+p.lawEN:''),false,3480), tblCell(p.auth+(p.authEN?'\n'+p.authEN:''),false,3000)] })),
+    ...optional.map((p,i) => new TableRow({ children:[tblCell(String(required.length+i+1),false,480), tblCell(p.name+(p.nameEN?' / '+p.nameEN:'')+' (เพิ่มเติม/Additional)',false,2400), tblCell(p.law+(p.lawEN?'\n'+p.lawEN:''),false,3480), tblCell(p.auth+(p.authEN?'\n'+p.authEN:''),false,3000)] })),
   ];
   const permitTable = new Table({ width:{ size:9360, type:WidthType.DXA }, columnWidths:[480,2400,3480,3000], rows:permitRows });
 
