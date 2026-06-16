@@ -766,110 +766,137 @@ function addCustomPermit() {
 function v(id){ return (document.getElementById(id)||{}).value||'' }
 function fmt(n){ return parseFloat(n||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2}) }
 function fmtDate(d){ if(!d) return '...............'; try{ const dt=new Date(d); return `${dt.getDate()} ${['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'][dt.getMonth()]} ${dt.getFullYear()+543}`; }catch(e){ return d; } }
+function fmtDateEN(d){ if(!d) return '_______________'; try{ const dt=new Date(d); return `${dt.getDate()} ${['January','February','March','April','May','June','July','August','September','October','November','December'][dt.getMonth()]} ${dt.getFullYear()}`; }catch(e){ return d; } }
+function biDate(d){ return `${fmtDate(d)} (${fmtDateEN(d)})` }
 function totalRai(){ return (parseFloat(v('landRai'))||0)+(parseFloat(v('landNgan'))||0)/4+(parseFloat(v('landSqwah'))||0)/400 }
 function totalPrice(){ return totalRai()*(parseFloat(v('pricePerRai'))||0) }
 function grandTotal(){ return totalPrice()*1.033 }
 
 // ─── CONTRACT TEXT ────────────────────────────────────────────────────────────
+function en(text){ return `<div class="sub en-text" style="color:#1565c0;font-style:italic;margin-top:2px;margin-bottom:6px">${text}</div>`; }
+function enp(text){ return `<p style="color:#1565c0;font-style:italic;margin-top:2px;margin-bottom:8px">${text}</p>`; }
+
 function buildContractHTML() {
   const industryName = (() => { const s = document.getElementById('industryType'); return s.options[s.selectedIndex]?.text || '...................' })();
   const rai=v('landRai')||'0', ngan=v('landNgan')||'0', sqwah=v('landSqwah')||'0';
   const required = permits.filter(p=>p.type==='required');
   const optional = permits.filter(p=>p.type==='optional');
+  const sqm = (totalRai()*1600).toLocaleString('th-TH',{maximumFractionDigits:2});
 
   return `
     <h2>สัญญาซื้อขายที่ดินในนิคมอุตสาหกรรม</h2>
-    <h3>LAND PURCHASE AND SALE AGREEMENT IN INDUSTRIAL ESTATE</h3>
-    <div class="contract-no">เลขที่สัญญา: ${v('contractNo')||'..................'} &nbsp;|&nbsp; วันที่: ${fmtDate(v('contractDate'))}</div>
+    <h3 style="color:#1565c0">LAND PURCHASE AND SALE AGREEMENT IN INDUSTRIAL ESTATE</h3>
+    <div class="contract-no">เลขที่สัญญา / Contract No.: ${v('contractNo')||'..................'} &nbsp;|&nbsp; วันที่ / Date: ${biDate(v('contractDate'))}</div>
 
     <div class="clause">
-      <div class="clause-title">ข้อ 1. คู่สัญญา</div>
-      <p>สัญญาฉบับนี้ทำขึ้น ณ ${v('contractPlace')||'นิคมอุตสาหกรรมเอเชียกรีน'} เมื่อวันที่ ${fmtDate(v('contractDate'))} ระหว่าง</p>
-      <div class="sub"><strong>ผู้ขาย:</strong> บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด ("Asiagreen Industrial Estate Co., Ltd.") โดย ${v('sellerRep')||'...................'} ในตำแหน่ง ${v('sellerRepTitle')||'...................'} ซึ่งต่อไปในสัญญานี้จะเรียกว่า <strong>"ผู้ขาย"</strong></div>
-      <div class="sub"><strong>ผู้ซื้อ:</strong> ${v('buyerNameTH')||'.....................'} (${v('buyerNameEN')||'.....................'}) เลขทะเบียนนิติบุคคล ${v('buyerRegNo')||'.....................'} ที่อยู่ ${v('buyerAddr')||'.....................'} โดย ${v('buyerRep')||'...................'} ในตำแหน่ง ${v('buyerRepTitle')||'...................'} ซึ่งต่อไปในสัญญานี้จะเรียกว่า <strong>"ผู้ซื้อ"</strong></div>
+      <div class="clause-title">ข้อ 1. คู่สัญญา / Clause 1. Parties</div>
+      <p>สัญญาฉบับนี้ทำขึ้น ณ ${v('contractPlace')||'นิคมอุตสาหกรรมเอเชียกรีน'} เมื่อวันที่ ${biDate(v('contractDate'))} ระหว่าง</p>
+      ${enp(`This Agreement is entered into at ${v('contractPlace')||'Asiagreen Industrial Estate'} on ${fmtDateEN(v('contractDate'))}, between:`)}
+      <div class="sub"><strong>ผู้ขาย / Seller:</strong> บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด ("Asiagreen Industrial Estate Co., Ltd.") โดย / represented by ${v('sellerRep')||'...................'} ในตำแหน่ง / Position: ${v('sellerRepTitle')||'...................'} ซึ่งต่อไปในสัญญานี้จะเรียกว่า <strong>"ผู้ขาย" ("Seller")</strong></div>
+      <div class="sub"><strong>ผู้ซื้อ / Purchaser:</strong> ${v('buyerNameTH')||'.....................'} (${v('buyerNameEN')||'.....................'}) เลขทะเบียนนิติบุคคล / Company Registration No. ${v('buyerRegNo')||'.....................'} ที่อยู่ / Address: ${v('buyerAddr')||'.....................'} โดย / represented by ${v('buyerRep')||'...................'} ในตำแหน่ง / Position: ${v('buyerRepTitle')||'...................'} ซึ่งต่อไปในสัญญานี้จะเรียกว่า <strong>"ผู้ซื้อ" ("Purchaser")</strong></div>
       <p style="margin-top:8px">ทั้งสองฝ่ายได้ตกลงทำสัญญาซื้อขายที่ดินกัน โดยมีข้อความและเงื่อนไขดังต่อไปนี้</p>
+      ${enp('Both parties have agreed to enter into this Land Purchase and Sale Agreement under the following terms and conditions:')}
     </div>
 
     <div class="clause">
-      <div class="clause-title">ข้อ 2. รายละเอียดทรัพย์สินที่ซื้อขาย</div>
+      <div class="clause-title">ข้อ 2. รายละเอียดทรัพย์สินที่ซื้อขาย / Clause 2. Property Description</div>
       <table>
-        <tr><th>รายการ</th><th>รายละเอียด</th></tr>
-        <tr><td>เลขที่แปลง</td><td>${v('plotNo')||'—'}</td></tr>
-        <tr><td>เลขที่โฉนดที่ดิน</td><td>${v('titleDeedNo')||'—'} เล่ม ${v('deedVolPage')||'—'}</td></tr>
-        <tr><td>ที่ตั้ง</td><td>${v('landLocation')||'—'}</td></tr>
-        <tr><td>โซน/บริเวณ</td><td>${v('landZone')||'—'}</td></tr>
-        <tr><td>ขนาดที่ดิน</td><td>${rai} ไร่ ${ngan} งาน ${sqwah} ตารางวา (ประมาณ ${(totalRai()*1600).toLocaleString('th-TH',{maximumFractionDigits:2})} ตารางเมตร)</td></tr>
+        <tr><th>รายการ / Item</th><th>รายละเอียด / Details</th></tr>
+        <tr><td>เลขที่แปลง / Plot No.</td><td>${v('plotNo')||'—'}</td></tr>
+        <tr><td>เลขที่โฉนดที่ดิน / Title Deed No.</td><td>${v('titleDeedNo')||'—'} เล่ม/Vol. ${v('deedVolPage')||'—'}</td></tr>
+        <tr><td>ที่ตั้ง / Location</td><td>${v('landLocation')||'—'}</td></tr>
+        <tr><td>โซน/บริเวณ / Zone/Area</td><td>${v('landZone')||'—'}</td></tr>
+        <tr><td>ขนาดที่ดิน / Land Area</td><td>${rai} ไร่ (Rai) ${ngan} งาน (Ngan) ${sqwah} ตารางวา (Sq.Wa) — ประมาณ / Approx. ${sqm} ตารางเมตร (sq.m.)</td></tr>
       </table>
     </div>
 
     <div class="clause">
-      <div class="clause-title">ข้อ 3. ราคาซื้อขายและการชำระเงิน</div>
+      <div class="clause-title">ข้อ 3. ราคาซื้อขายและการชำระเงิน / Clause 3. Purchase Price and Payment</div>
       <table>
-        <tr><th>รายการ</th><th>จำนวนเงิน (บาท)</th></tr>
-        <tr><td>ราคาที่ดิน (${fmt(v('pricePerRai'))} บาท/ไร่)</td><td>${fmt(totalPrice())}</td></tr>
-        <tr><td>ภาษีธุรกิจเฉพาะ 3.3%</td><td>${fmt(totalPrice()*0.033)}</td></tr>
-        <tr><td><strong>ราคารวมสุทธิ</strong></td><td><strong>${fmt(grandTotal())}</strong></td></tr>
+        <tr><th>รายการ / Item</th><th>จำนวนเงิน (บาท) / Amount (THB)</th></tr>
+        <tr><td>ราคาที่ดิน / Land Price (${fmt(v('pricePerRai'))} บาท/ไร่ — THB/Rai)</td><td>${fmt(totalPrice())}</td></tr>
+        <tr><td>ภาษีธุรกิจเฉพาะ 3.3% / Specific Business Tax 3.3%</td><td>${fmt(totalPrice()*0.033)}</td></tr>
+        <tr><td><strong>ราคารวมสุทธิ / Grand Total</strong></td><td><strong>${fmt(grandTotal())}</strong></td></tr>
       </table>
-      <div class="sub" style="margin-top:8px">เงินจอง: ${fmt(v('depositAmt'))} บาท | เงินดาวน์: ${v('downPct')||'—'}% | วันโอนกรรมสิทธิ์: ${fmtDate(v('transferDate'))}</div>
+      <div class="sub" style="margin-top:8px">เงินจอง / Reservation Fee: ${fmt(v('depositAmt'))} บาท (THB) | เงินดาวน์ / Down Payment: ${v('downPct')||'—'}% | วันโอนกรรมสิทธิ์ / Transfer Date: ${biDate(v('transferDate'))}</div>
       ${v('paymentTerms') ? `<div class="sub">${v('paymentTerms')}</div>` : ''}
     </div>
 
     <div class="clause">
-      <div class="clause-title">ข้อ 4. การโอนกรรมสิทธิ์</div>
-      <p>ผู้ขายตกลงโอนกรรมสิทธิ์ที่ดินให้แก่ผู้ซื้อ ณ สำนักงานที่ดิน ภายในวันที่ ${fmtDate(v('transferDate'))} เมื่อผู้ซื้อชำระราคาที่ดินครบถ้วนแล้ว ค่าธรรมเนียมการโอนและภาษีอากรทั้งปวงให้เป็นไปตามที่กฎหมายกำหนด โดยผู้ซื้อและผู้ขายรับผิดชอบร่วมกันฝ่ายละครึ่ง เว้นแต่จะตกลงกันเป็นอย่างอื่น</p>
+      <div class="clause-title">ข้อ 4. การโอนกรรมสิทธิ์ / Clause 4. Transfer of Ownership</div>
+      <p>ผู้ขายตกลงโอนกรรมสิทธิ์ที่ดินให้แก่ผู้ซื้อ ณ สำนักงานที่ดิน ภายในวันที่ ${biDate(v('transferDate'))} เมื่อผู้ซื้อชำระราคาที่ดินครบถ้วนแล้ว ค่าธรรมเนียมการโอนและภาษีอากรทั้งปวงให้เป็นไปตามที่กฎหมายกำหนด โดยผู้ซื้อและผู้ขายรับผิดชอบร่วมกันฝ่ายละครึ่ง เว้นแต่จะตกลงกันเป็นอย่างอื่น</p>
+      ${enp(`The Seller agrees to transfer ownership of the land to the Purchaser at the Land Office no later than ${fmtDateEN(v('transferDate'))}, upon full payment of the purchase price. All transfer fees and taxes shall be borne equally by both parties unless otherwise agreed.`)}
     </div>
 
     <div class="clause">
-      <div class="clause-title">ข้อ 5. วัตถุประสงค์การใช้ที่ดินและข้อผูกพันของผู้ซื้อ</div>
+      <div class="clause-title">ข้อ 5. วัตถุประสงค์การใช้ที่ดินและข้อผูกพันของผู้ซื้อ / Clause 5. Purpose of Use and Purchaser's Obligations</div>
       <div class="sub">5.1 ผู้ซื้อจะใช้ที่ดินเพื่อประกอบกิจการ <strong>${industryName}</strong> เท่านั้น หากประสงค์จะเปลี่ยนแปลงวัตถุประสงค์ต้องได้รับความยินยอมเป็นลายลักษณ์อักษรจากผู้ขายก่อน</div>
-      <div class="sub">5.2 ผู้ซื้อจะเริ่มก่อสร้างโรงงาน/อาคารภายในวันที่ <strong>${fmtDate(v('constructStart'))}</strong> และจะก่อสร้างแล้วเสร็จภายในวันที่ <strong>${fmtDate(v('constructEnd'))}</strong></div>
-      <div class="sub">5.3 ผู้ซื้อจะเริ่มดำเนินการเชิงพาณิชย์ (Commercial Commencement) ภายในวันที่ <strong>${fmtDate(v('commenceDate'))}</strong></div>
+      ${en(`5.1 The Purchaser shall use the land solely for <strong>${industryName}</strong> purposes. Any change of use requires the Seller's prior written consent.`)}
+      <div class="sub">5.2 ผู้ซื้อจะเริ่มก่อสร้างโรงงาน/อาคารภายในวันที่ <strong>${biDate(v('constructStart'))}</strong> และจะก่อสร้างแล้วเสร็จภายในวันที่ <strong>${biDate(v('constructEnd'))}</strong></div>
+      ${en(`5.2 The Purchaser shall commence construction no later than <strong>${fmtDateEN(v('constructStart'))}</strong> and complete construction by <strong>${fmtDateEN(v('constructEnd'))}</strong>.`)}
+      <div class="sub">5.3 ผู้ซื้อจะเริ่มดำเนินการเชิงพาณิชย์ (Commercial Commencement) ภายในวันที่ <strong>${biDate(v('commenceDate'))}</strong></div>
+      ${en(`5.3 The Purchaser shall commence commercial operations no later than <strong>${fmtDateEN(v('commenceDate'))}</strong>.`)}
       <div class="sub">5.4 ผู้ซื้อต้องปฏิบัติตามกฎระเบียบของนิคมอุตสาหกรรมเอเชียกรีนทุกประการ</div>
+      ${en('5.4 The Purchaser shall comply with all rules and regulations of Asiagreen Industrial Estate.')}
       <div class="sub">5.5 ผู้ซื้อต้องรักษาสิ่งแวดล้อม ไม่ก่อให้เกิดมลภาวะเกินมาตรฐานที่กฎหมายกำหนด</div>
-      ${v('productionDetail') ? `<div class="sub">5.6 รายละเอียดการผลิต: ${v('productionDetail')}</div>` : ''}
+      ${en('5.5 The Purchaser shall maintain environmental standards and shall not cause pollution exceeding the limits prescribed by law.')}
+      ${v('productionDetail') ? `<div class="sub">5.6 รายละเอียดการผลิต / Production Details: ${v('productionDetail')}</div>` : ''}
     </div>
 
     <div class="clause">
-      <div class="clause-title">ข้อ 6. ใบอนุญาตและการปฏิบัติตามกฎหมาย</div>
-      <p>ผู้ซื้อมีหน้าที่รับผิดชอบในการขอรับใบอนุญาตและปฏิบัติตามกฎหมายที่เกี่ยวข้องทั้งหมด รวมถึงแต่ไม่จำกัดเพียงรายการดังต่อไปนี้:</p>
+      <div class="clause-title">ข้อ 6. ใบอนุญาตและการปฏิบัติตามกฎหมาย / Clause 6. Permits and Legal Compliance</div>
+      <p>ผู้ซื้อมีหน้าที่รับผิดชอบในการขอรับใบอนุญาตและปฏิบัติตามกฎหมายที่เกี่ยวข้องทั้งหมด รวมถึงแต่ไม่จำกัดเพียงรายการดังต่อไปนี้</p>
+      ${enp('The Purchaser is solely responsible for obtaining all required permits and complying with all applicable laws, including but not limited to the following:')}
       <table>
-        <tr><th>#</th><th>ใบอนุญาต</th><th>กฎหมายอ้างอิง</th><th>หน่วยงาน</th></tr>
+        <tr><th>#</th><th>ใบอนุญาต / Permit</th><th>กฎหมายอ้างอิง / Legal Reference</th><th>หน่วยงาน / Authority</th></tr>
         ${required.map((p,i)=>`<tr><td>${i+1}</td><td>${p.name}</td><td>${p.law}</td><td>${p.auth}</td></tr>`).join('')}
-        ${optional.length ? `<tr><td colspan="4" style="background:#f9f9f9;font-weight:600;font-size:12px">${T[currentLang].optionalSection}</td></tr>` : ''}
+        ${optional.length ? `<tr><td colspan="4" style="background:#f9f9f9;font-weight:600;font-size:12px">ใบอนุญาตเพิ่มเติม / Additional Permits (Optional)</td></tr>` : ''}
         ${optional.map((p,i)=>`<tr><td style="color:#888">${required.length+i+1}</td><td style="color:#666">${p.name}</td><td style="color:#666">${p.law}</td><td style="color:#666">${p.auth}</td></tr>`).join('')}
       </table>
-      <div class="sub" style="margin-top:8px">ผู้ซื้อต้องยื่นขอใบอนุญาตประกอบกิจการโรงงาน (ถ้ามี) ไม่เกินวันที่ ${fmtDate(v('licenseDeadline'))}</div>
+      <div class="sub" style="margin-top:8px">ผู้ซื้อต้องยื่นขอใบอนุญาตประกอบกิจการโรงงาน (ถ้ามี) ไม่เกินวันที่ ${biDate(v('licenseDeadline'))}</div>
+      ${en(`The Purchaser must submit the factory operating license application (if applicable) no later than ${fmtDateEN(v('licenseDeadline'))}.`)}
     </div>
 
     <div class="clause">
-      <div class="clause-title">ข้อ 7. การรับประกันของผู้ขาย</div>
+      <div class="clause-title">ข้อ 7. การรับประกันของผู้ขาย / Clause 7. Seller's Warranties</div>
       <div class="sub">7.1 ผู้ขายรับประกันว่าที่ดินปลอดจากภาระผูกพัน จำนอง หรือสิทธิของบุคคลที่สาม</div>
+      ${en('7.1 The Seller warrants that the land is free from encumbrances, mortgages, or third-party claims.')}
       <div class="sub">7.2 ผู้ขายรับประกันว่าที่ดินได้รับการพัฒนาโครงสร้างพื้นฐาน (ถนน ไฟฟ้า ประปา) ตามมาตรฐานของนิคมอุตสาหกรรม</div>
+      ${en('7.2 The Seller warrants that the land has been developed with infrastructure (roads, electricity, water supply) to industrial estate standards.')}
       <div class="sub">7.3 ผู้ขายรับประกันว่าที่ดินตั้งอยู่ในเขตนิคมอุตสาหกรรมที่ได้รับอนุญาตโดยถูกต้องตามกฎหมาย</div>
+      ${en('7.3 The Seller warrants that the land is located within a legally authorized industrial estate zone.')}
     </div>
 
     <div class="clause">
-      <div class="clause-title">ข้อ 8. ความรับผิดด้านสิ่งแวดล้อมและความปลอดภัย</div>
+      <div class="clause-title">ข้อ 8. ความรับผิดด้านสิ่งแวดล้อมและความปลอดภัย / Clause 8. Environmental and Safety Liability</div>
       <p>ผู้ซื้อรับผิดชอบต่อผลกระทบด้านสิ่งแวดล้อมที่เกิดจากการประกอบกิจการของตน และต้องปฏิบัติตามมาตรฐานการจัดการสิ่งแวดล้อมของนิคมอุตสาหกรรมและกฎหมายสิ่งแวดล้อมที่บังคับใช้</p>
+      ${enp('The Purchaser shall be fully liable for any environmental impact arising from its operations and must comply with the environmental management standards of the industrial estate and all applicable environmental laws.')}
     </div>
 
     <div class="clause">
-      <div class="clause-title">ข้อ 9. เหตุผิดนัดและการบอกเลิกสัญญา</div>
+      <div class="clause-title">ข้อ 9. เหตุผิดนัดและการบอกเลิกสัญญา / Clause 9. Default and Termination</div>
       <div class="sub">9.1 หากผู้ซื้อผิดนัดชำระราคาที่ดิน ผู้ขายมีสิทธิบอกเลิกสัญญาและริบเงินจอง/เงินดาวน์ที่ชำระมาแล้ว</div>
+      ${en('9.1 If the Purchaser defaults on payment, the Seller has the right to terminate this Agreement and forfeit all reservation fees and down payments already paid.')}
       <div class="sub">9.2 หากผู้ซื้อไม่เริ่มก่อสร้างหรือไม่เริ่มดำเนินการเชิงพาณิชย์ตามกำหนด ผู้ขายมีสิทธิเรียกค่าปรับในอัตราร้อยละ 0.1 ต่อวันของราคาที่ดิน</div>
+      ${en('9.2 If the Purchaser fails to commence construction or commercial operations by the stipulated dates, the Seller may impose a penalty of 0.1% of the land price per day of delay.')}
       <div class="sub">9.3 หากผู้ขายผิดสัญญา ผู้ซื้อมีสิทธิบอกเลิกสัญญาและเรียกเงินคืนพร้อมดอกเบี้ยร้อยละ 7.5 ต่อปี</div>
+      ${en('9.3 If the Seller breaches this Agreement, the Purchaser has the right to terminate and claim a full refund with interest at 7.5% per annum.')}
     </div>
 
     <div class="clause">
-      <div class="clause-title">ข้อ 10. กฎหมายที่ใช้บังคับและการระงับข้อพิพาท</div>
+      <div class="clause-title">ข้อ 10. กฎหมายที่ใช้บังคับและการระงับข้อพิพาท / Clause 10. Governing Law and Dispute Resolution</div>
       <p>สัญญาฉบับนี้อยู่ภายใต้บังคับกฎหมายแห่งราชอาณาจักรไทย หากมีข้อพิพาทเกิดขึ้น คู่สัญญาตกลงระงับข้อพิพาทโดยอนุญาโตตุลาการตามข้อบังคับของสถาบันอนุญาโตตุลาการ สำนักงานศาลยุติธรรม หรือนำคดีขึ้นสู่ศาลที่มีเขตอำนาจ</p>
+      ${enp('This Agreement shall be governed by the laws of the Kingdom of Thailand. Any dispute shall be resolved by arbitration under the rules of the Thai Arbitration Institute, Office of the Judiciary, or by a court of competent jurisdiction.')}
     </div>
 
     <div class="clause">
-      <div class="clause-title">ข้อ 11. บทบัญญัติทั่วไป</div>
+      <div class="clause-title">ข้อ 11. บทบัญญัติทั่วไป / Clause 11. General Provisions</div>
       <div class="sub">11.1 สัญญาฉบับนี้ถือเป็นข้อตกลงทั้งหมดระหว่างคู่สัญญา ยกเลิกข้อตกลงก่อนหน้าทั้งหมด</div>
+      ${en('11.1 This Agreement constitutes the entire agreement between the parties and supersedes all prior agreements and understandings.')}
       <div class="sub">11.2 การแก้ไขสัญญาต้องทำเป็นลายลักษณ์อักษรและลงนามโดยผู้มีอำนาจของทั้งสองฝ่าย</div>
+      ${en('11.2 Any amendment to this Agreement must be made in writing and signed by authorized representatives of both parties.')}
       <div class="sub">11.3 สัญญาฉบับนี้จัดทำสองฉบับ มีข้อความตรงกัน คู่สัญญาแต่ละฝ่ายถือไว้ฉบับละหนึ่งฉบับ</div>
+      ${en('11.3 This Agreement is executed in two originals of equal force, with each party retaining one copy.')}
     </div>
 
     <div class="sig-block">
@@ -877,17 +904,19 @@ function buildContractHTML() {
         <div class="sig-line"></div>
         <div class="sig-label">ลงชื่อ ผู้ขาย / Seller's Signature</div>
         <div class="sig-label" style="margin-top:4px">(${v('sellerRep')||'......................................'})</div>
-        <div class="sig-label">ตำแหน่ง ${v('sellerRepTitle')||'................................'}</div>
+        <div class="sig-label">ตำแหน่ง / Position: ${v('sellerRepTitle')||'................................'}</div>
         <div class="sig-label">บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด</div>
-        <div class="sig-label">วันที่ ${fmtDate(v('contractDate'))}</div>
+        <div class="sig-label">Asiagreen Industrial Estate Co., Ltd.</div>
+        <div class="sig-label">วันที่ / Date: ${biDate(v('contractDate'))}</div>
       </div>
       <div>
         <div class="sig-line"></div>
         <div class="sig-label">ลงชื่อ ผู้ซื้อ / Purchaser's Signature</div>
         <div class="sig-label" style="margin-top:4px">(${v('buyerRep')||'......................................'})</div>
-        <div class="sig-label">ตำแหน่ง ${v('buyerRepTitle')||'................................'}</div>
+        <div class="sig-label">ตำแหน่ง / Position: ${v('buyerRepTitle')||'................................'}</div>
         <div class="sig-label">${v('buyerNameTH')||'................................'}</div>
-        <div class="sig-label">วันที่ ${fmtDate(v('contractDate'))}</div>
+        <div class="sig-label">${v('buyerNameEN')||'................................'}</div>
+        <div class="sig-label">วันที่ / Date: ${biDate(v('contractDate'))}</div>
       </div>
     </div>
 
@@ -954,32 +983,50 @@ async function generateDocx() {
     });
   }
 
-  function clauseTitle(text) {
+  function clauseTitle(thText, enText) {
     return new Paragraph({
       spacing:{ before:200, after:80, line:360 },
-      children:[new TextRun({ text, bold:true, size:24, font:'TH Sarabun New', color:'1a5c2e' })]
+      children:[
+        new TextRun({ text: thText, bold:true, size:24, font:'TH Sarabun New', color:'1a5c2e' }),
+        new TextRun({ text: enText ? `  /  ${enText}` : '', bold:true, size:22, font:'TH Sarabun New', color:'1565c0' }),
+      ]
     });
   }
 
-  function subpara(text) {
+  function subpara(thText, enText='') {
+    const children = [new TextRun({ text: thText, size:22, font:'TH Sarabun New' })];
+    if (enText) children.push(new TextRun({ text: `\n${enText}`, size:20, font:'TH Sarabun New', color:'1565c0', italics:true }));
     return new Paragraph({
-      indent: { left: 640, hanging: 0 },
+      indent: { left: 640 },
       spacing:{ before:40, after:40, line:360 },
-      children:[new TextRun({ text, size:22, font:'TH Sarabun New' })]
+      children
     });
   }
+
+  function bipara(thText, enText, opts={}) {
+    return new Paragraph({
+      alignment: opts.center ? AlignmentType.CENTER : AlignmentType.BOTH,
+      spacing:{ before: opts.before||60, after: opts.after||60, line:360 },
+      children:[
+        new TextRun({ text: thText, size: opts.size||22, font:'TH Sarabun New', bold: opts.bold }),
+        new TextRun({ text: enText ? `\n${enText}` : '', size: opts.enSize||(opts.size ? opts.size-2 : 20), font:'TH Sarabun New', color:'1565c0', italics:true }),
+      ]
+    });
+  }
+
+  const sqm = (totalRai()*1600).toLocaleString('th-TH',{maximumFractionDigits:2});
 
   // TABLE: Land details
   const landTable = new Table({
     width: { size: 9360, type: WidthType.DXA },
     columnWidths: [2880, 6480],
     rows: [
-      new TableRow({ children:[tblCell('รายการ/Item',true,2880), tblCell('รายละเอียด/Details',true,6480)] }),
-      new TableRow({ children:[tblCell('เลขที่แปลง',false,2880), tblCell(v('plotNo')||'—',false,6480)] }),
-      new TableRow({ children:[tblCell('เลขที่โฉนด',false,2880), tblCell(`${v('titleDeedNo')||'—'} เล่ม ${v('deedVolPage')||'—'}`,false,6480)] }),
-      new TableRow({ children:[tblCell('ที่ตั้ง',false,2880), tblCell(v('landLocation')||'—',false,6480)] }),
-      new TableRow({ children:[tblCell('โซน/บริเวณ',false,2880), tblCell(v('landZone')||'—',false,6480)] }),
-      new TableRow({ children:[tblCell('ขนาดที่ดิน',false,2880), tblCell(`${rai} ไร่ ${ngan} งาน ${sqwah} ตารางวา (${(totalRai()*1600).toLocaleString('th-TH',{maximumFractionDigits:2})} ตร.ม.)`,false,6480)] }),
+      new TableRow({ children:[tblCell('รายการ / Item',true,2880), tblCell('รายละเอียด / Details',true,6480)] }),
+      new TableRow({ children:[tblCell('เลขที่แปลง / Plot No.',false,2880), tblCell(v('plotNo')||'—',false,6480)] }),
+      new TableRow({ children:[tblCell('เลขที่โฉนด / Title Deed No.',false,2880), tblCell(`${v('titleDeedNo')||'—'} เล่ม/Vol. ${v('deedVolPage')||'—'}`,false,6480)] }),
+      new TableRow({ children:[tblCell('ที่ตั้ง / Location',false,2880), tblCell(v('landLocation')||'—',false,6480)] }),
+      new TableRow({ children:[tblCell('โซน/บริเวณ / Zone/Area',false,2880), tblCell(v('landZone')||'—',false,6480)] }),
+      new TableRow({ children:[tblCell('ขนาดที่ดิน / Land Area',false,2880), tblCell(`${rai} ไร่ ${ngan} งาน ${sqwah} ตารางวา / ${rai} Rai ${ngan} Ngan ${sqwah} Sq.Wa — ${sqm} ตร.ม. / sq.m.`,false,6480)] }),
     ]
   });
 
@@ -988,18 +1035,18 @@ async function generateDocx() {
     width: { size: 9360, type: WidthType.DXA },
     columnWidths: [5400, 3960],
     rows: [
-      new TableRow({ children:[tblCell('รายการ',true,5400), tblCell('จำนวนเงิน (บาท)',true,3960)] }),
-      new TableRow({ children:[tblCell(`ราคาที่ดิน (${fmt(v('pricePerRai'))} บาท/ไร่)`,false,5400), tblCell(fmt(totalPrice()),false,3960)] }),
-      new TableRow({ children:[tblCell('ภาษีธุรกิจเฉพาะ 3.3%',false,5400), tblCell(fmt(totalPrice()*0.033),false,3960)] }),
+      new TableRow({ children:[tblCell('รายการ / Item',true,5400), tblCell('จำนวนเงิน (บาท) / Amount (THB)',true,3960)] }),
+      new TableRow({ children:[tblCell(`ราคาที่ดิน / Land Price (${fmt(v('pricePerRai'))} บาท/ไร่ — THB/Rai)`,false,5400), tblCell(fmt(totalPrice()),false,3960)] }),
+      new TableRow({ children:[tblCell('ภาษีธุรกิจเฉพาะ 3.3% / Specific Business Tax 3.3%',false,5400), tblCell(fmt(totalPrice()*0.033),false,3960)] }),
       new TableRow({ children:[tblCell('ราคารวมสุทธิ / Grand Total',true,5400), tblCell(fmt(grandTotal()),true,3960)] }),
     ]
   });
 
   // TABLE: Permits
   const permitRows = [
-    new TableRow({ children:[tblCell('#',true,480), tblCell('ใบอนุญาต',true,2400), tblCell('กฎหมายอ้างอิง',true,3480), tblCell('หน่วยงาน',true,3000)] }),
+    new TableRow({ children:[tblCell('#',true,480), tblCell('ใบอนุญาต / Permit',true,2400), tblCell('กฎหมายอ้างอิง / Legal Reference',true,3480), tblCell('หน่วยงาน / Authority',true,3000)] }),
     ...required.map((p,i) => new TableRow({ children:[tblCell(String(i+1),false,480), tblCell(p.name,false,2400), tblCell(p.law,false,3480), tblCell(p.auth,false,3000)] })),
-    ...optional.map((p,i) => new TableRow({ children:[tblCell(String(required.length+i+1),false,480), tblCell(p.name+' (เพิ่มเติม)',false,2400), tblCell(p.law,false,3480), tblCell(p.auth,false,3000)] })),
+    ...optional.map((p,i) => new TableRow({ children:[tblCell(String(required.length+i+1),false,480), tblCell(p.name+' (เพิ่มเติม/Additional)',false,2400), tblCell(p.law,false,3480), tblCell(p.auth,false,3000)] })),
   ];
   const permitTable = new Table({ width:{ size:9360, type:WidthType.DXA }, columnWidths:[480,2400,3480,3000], rows:permitRows });
 
@@ -1011,20 +1058,22 @@ async function generateDocx() {
       new TableRow({ children: [
         new TableCell({ borders:{ top:border, bottom:border, left:border, right:border }, width:{size:4680,type:WidthType.DXA}, margins:{top:200,bottom:200,left:200,right:200},
           children:[
-            para('ลงชื่อ ........................................', {center:true}),
+            para('ลงชื่อ / Signature ........................................', {center:true}),
             para(`(${v('sellerRep')||'.....................................'})`  , {center:true}),
-            para(`ตำแหน่ง ${v('sellerRepTitle')||'.....................'}`, {center:true}),
+            para(`ตำแหน่ง / Position: ${v('sellerRepTitle')||'.....................'}`, {center:true}),
             para('บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด', {center:true, size:20}),
-            para(`วันที่ ${fmtDate(v('contractDate'))}`, {center:true}),
+            para('Asiagreen Industrial Estate Co., Ltd.', {center:true, size:18}),
+            para(`วันที่ / Date: ${fmtDate(v('contractDate'))} (${fmtDateEN(v('contractDate'))})`, {center:true, size:18}),
           ]
         }),
         new TableCell({ borders:{ top:border, bottom:border, left:border, right:border }, width:{size:4680,type:WidthType.DXA}, margins:{top:200,bottom:200,left:200,right:200},
           children:[
-            para('ลงชื่อ ........................................', {center:true}),
+            para('ลงชื่อ / Signature ........................................', {center:true}),
             para(`(${v('buyerRep')||'.....................................'})`   , {center:true}),
-            para(`ตำแหน่ง ${v('buyerRepTitle')||'.....................'}`, {center:true}),
+            para(`ตำแหน่ง / Position: ${v('buyerRepTitle')||'.....................'}`, {center:true}),
             para(v('buyerNameTH')||'....................................', {center:true, size:20}),
-            para(`วันที่ ${fmtDate(v('contractDate'))}`, {center:true}),
+            para(v('buyerNameEN')||'....................................', {center:true, size:18}),
+            para(`วันที่ / Date: ${fmtDate(v('contractDate'))} (${fmtDateEN(v('contractDate'))})`, {center:true, size:18}),
           ]
         }),
       ]})
@@ -1074,60 +1123,61 @@ async function generateDocx() {
         new Paragraph({ border:{bottom:{style:BorderStyle.SINGLE, size:8, color:'2d8a4a', space:4}}, spacing:{after:200}, children:[] }),
 
         // Clause 1: Parties
-        clauseTitle('ข้อ 1. คู่สัญญา'),
-        para(`สัญญาฉบับนี้ทำขึ้น ณ ${v('contractPlace')||'นิคมอุตสาหกรรมเอเชียกรีน'} เมื่อวันที่ ${fmtDate(v('contractDate'))} ระหว่าง`),
-        subpara(`ผู้ขาย: บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด ("Asiagreen Industrial Estate Co., Ltd.") โดย ${v('sellerRep')||'.........................'} ตำแหน่ง ${v('sellerRepTitle')||'.........................'} ซึ่งต่อไปเรียกว่า "ผู้ขาย"`),
-        subpara(`ผู้ซื้อ: ${v('buyerNameTH')||'.....................................'} (${v('buyerNameEN')||'.....................................'}) เลขทะเบียน ${v('buyerRegNo')||'—'} โดย ${v('buyerRep')||'.........................'} ตำแหน่ง ${v('buyerRepTitle')||'.........................'} ซึ่งต่อไปเรียกว่า "ผู้ซื้อ"`),
-        para('ทั้งสองฝ่ายตกลงทำสัญญาโดยมีข้อความดังต่อไปนี้'),
+        clauseTitle('ข้อ 1. คู่สัญญา', 'Clause 1. Parties'),
+        para(`สัญญาฉบับนี้ทำขึ้น ณ ${v('contractPlace')||'นิคมอุตสาหกรรมเอเชียกรีน'} เมื่อวันที่ ${fmtDate(v('contractDate'))} (${fmtDateEN(v('contractDate'))}) ระหว่าง`),
+        para(`This Agreement is made at ${v('contractPlace')||'Asiagreen Industrial Estate'} on ${fmtDateEN(v('contractDate'))} between:`, {italic:true, color:'1565c0', size:20}),
+        subpara(`ผู้ขาย: บริษัท เอเชียกรีน อินดัสเทรียล เอสเตท จำกัด โดย ${v('sellerRep')||'.........................'} ตำแหน่ง ${v('sellerRepTitle')||'.........................'} ซึ่งต่อไปเรียกว่า "ผู้ขาย"`, `Seller: Asiagreen Industrial Estate Co., Ltd., represented by ${v('sellerRep')||'.........................'}, Position: ${v('sellerRepTitle')||'.........................'}, hereinafter referred to as the "Seller"`),
+        subpara(`ผู้ซื้อ: ${v('buyerNameTH')||'.....................................'} (${v('buyerNameEN')||'.....................................'}) เลขทะเบียน ${v('buyerRegNo')||'—'} โดย ${v('buyerRep')||'.........................'} ตำแหน่ง ${v('buyerRepTitle')||'.........................'} ซึ่งต่อไปเรียกว่า "ผู้ซื้อ"`, `Buyer: ${v('buyerNameEN')||'.....................................'} (${v('buyerNameTH')||'.....................................'}) Registration No. ${v('buyerRegNo')||'—'}, represented by ${v('buyerRep')||'.........................'}, Position: ${v('buyerRepTitle')||'.........................'}, hereinafter referred to as the "Buyer"`),
+        subpara('ทั้งสองฝ่ายตกลงทำสัญญาโดยมีข้อความดังต่อไปนี้', 'Both parties agree to enter into this Agreement on the following terms and conditions:'),
 
         // Clause 2: Land
-        clauseTitle('ข้อ 2. รายละเอียดทรัพย์สินที่ซื้อขาย'),
+        clauseTitle('ข้อ 2. รายละเอียดทรัพย์สินที่ซื้อขาย', 'Clause 2. Description of Property'),
         landTable,
 
         // Clause 3: Price
-        clauseTitle('ข้อ 3. ราคาซื้อขายและการชำระเงิน'),
+        clauseTitle('ข้อ 3. ราคาซื้อขายและการชำระเงิน', 'Clause 3. Purchase Price and Payment'),
         priceTable,
-        ...(v('paymentTerms') ? [para(`เงื่อนไขการชำระเงิน: ${v('paymentTerms')}`)] : []),
+        ...(v('paymentTerms') ? [subpara(`เงื่อนไขการชำระเงิน: ${v('paymentTerms')}`, `Payment Terms: ${v('paymentTerms')}`)] : []),
 
         // Clause 4: Transfer
-        clauseTitle('ข้อ 4. การโอนกรรมสิทธิ์'),
-        para(`ผู้ขายตกลงโอนกรรมสิทธิ์ที่ดินให้แก่ผู้ซื้อ ณ สำนักงานที่ดิน ภายในวันที่ ${fmtDate(v('transferDate'))} เมื่อผู้ซื้อชำระราคาที่ดินครบถ้วนแล้ว ค่าธรรมเนียมการโอนและภาษีอากรทั้งปวงให้เป็นไปตามที่กฎหมายกำหนด`),
+        clauseTitle('ข้อ 4. การโอนกรรมสิทธิ์', 'Clause 4. Transfer of Ownership'),
+        subpara(`ผู้ขายตกลงโอนกรรมสิทธิ์ที่ดินให้แก่ผู้ซื้อ ณ สำนักงานที่ดิน ภายในวันที่ ${fmtDate(v('transferDate'))} (${fmtDateEN(v('transferDate'))}) เมื่อผู้ซื้อชำระราคาที่ดินครบถ้วนแล้ว ค่าธรรมเนียมการโอนและภาษีอากรทั้งปวงให้เป็นไปตามที่กฎหมายกำหนด`, `The Seller agrees to transfer ownership of the land to the Buyer at the Land Office by ${fmtDateEN(v('transferDate'))} upon full payment of the purchase price. All transfer fees and taxes shall be borne as prescribed by law.`),
 
         // Clause 5: Obligations
-        clauseTitle('ข้อ 5. วัตถุประสงค์การใช้ที่ดินและข้อผูกพันของผู้ซื้อ'),
-        subpara(`5.1 ผู้ซื้อจะใช้ที่ดินเพื่อประกอบกิจการ ${industryName} เท่านั้น หากประสงค์จะเปลี่ยนแปลงต้องได้รับความยินยอมเป็นลายลักษณ์อักษรจากผู้ขาย`),
-        subpara(`5.2 ผู้ซื้อจะเริ่มก่อสร้างภายในวันที่ ${fmtDate(v('constructStart'))} และก่อสร้างแล้วเสร็จภายในวันที่ ${fmtDate(v('constructEnd'))}`),
-        subpara(`5.3 ผู้ซื้อจะเริ่มดำเนินการเชิงพาณิชย์ (Commercial Commencement) ภายในวันที่ ${fmtDate(v('commenceDate'))}`),
-        subpara('5.4 ผู้ซื้อต้องปฏิบัติตามกฎระเบียบของนิคมอุตสาหกรรมเอเชียกรีนทุกประการ'),
-        subpara('5.5 ผู้ซื้อต้องรักษาสิ่งแวดล้อมและไม่ก่อให้เกิดมลภาวะเกินกว่ามาตรฐานที่กฎหมายกำหนด'),
+        clauseTitle('ข้อ 5. วัตถุประสงค์การใช้ที่ดินและข้อผูกพันของผู้ซื้อ', 'Clause 5. Land Use Purpose and Buyer Obligations'),
+        subpara(`5.1 ผู้ซื้อจะใช้ที่ดินเพื่อประกอบกิจการ ${industryName} เท่านั้น หากประสงค์จะเปลี่ยนแปลงต้องได้รับความยินยอมเป็นลายลักษณ์อักษรจากผู้ขาย`, `5.1 The Buyer shall use the land solely for ${industryName} operations. Any change of use requires prior written consent from the Seller.`),
+        subpara(`5.2 ผู้ซื้อจะเริ่มก่อสร้างภายในวันที่ ${fmtDate(v('constructStart'))} (${fmtDateEN(v('constructStart'))}) และก่อสร้างแล้วเสร็จภายในวันที่ ${fmtDate(v('constructEnd'))} (${fmtDateEN(v('constructEnd'))})`, `5.2 The Buyer shall commence construction by ${fmtDateEN(v('constructStart'))} and complete construction by ${fmtDateEN(v('constructEnd'))}.`),
+        subpara(`5.3 ผู้ซื้อจะเริ่มดำเนินการเชิงพาณิชย์ (Commercial Commencement) ภายในวันที่ ${fmtDate(v('commenceDate'))} (${fmtDateEN(v('commenceDate'))})`, `5.3 The Buyer shall commence commercial operations by ${fmtDateEN(v('commenceDate'))}.`),
+        subpara('5.4 ผู้ซื้อต้องปฏิบัติตามกฎระเบียบของนิคมอุตสาหกรรมเอเชียกรีนทุกประการ', '5.4 The Buyer must comply with all regulations of the Asiagreen Industrial Estate.'),
+        subpara('5.5 ผู้ซื้อต้องรักษาสิ่งแวดล้อมและไม่ก่อให้เกิดมลภาวะเกินกว่ามาตรฐานที่กฎหมายกำหนด', '5.5 The Buyer must preserve the environment and must not cause pollution beyond legally prescribed standards.'),
 
         // Clause 6: Permits
-        clauseTitle('ข้อ 6. ใบอนุญาตและการปฏิบัติตามกฎหมาย'),
-        para('ผู้ซื้อมีหน้าที่รับผิดชอบในการขอรับใบอนุญาตและปฏิบัติตามกฎหมายที่เกี่ยวข้องทั้งหมด รวมถึงแต่ไม่จำกัดเพียง:'),
+        clauseTitle('ข้อ 6. ใบอนุญาตและการปฏิบัติตามกฎหมาย', 'Clause 6. Permits and Legal Compliance'),
+        subpara('ผู้ซื้อมีหน้าที่รับผิดชอบในการขอรับใบอนุญาตและปฏิบัติตามกฎหมายที่เกี่ยวข้องทั้งหมด รวมถึงแต่ไม่จำกัดเพียง:', 'The Buyer is responsible for obtaining all required permits and complying with all applicable laws, including but not limited to:'),
         permitTable,
-        subpara(`ผู้ซื้อต้องยื่นขอใบอนุญาตประกอบกิจการโรงงาน (ถ้ามี) ไม่เกินวันที่ ${fmtDate(v('licenseDeadline'))}`),
+        subpara(`ผู้ซื้อต้องยื่นขอใบอนุญาตประกอบกิจการโรงงาน (ถ้ามี) ไม่เกินวันที่ ${fmtDate(v('licenseDeadline'))} (${fmtDateEN(v('licenseDeadline'))})`, `The Buyer must submit the factory operating license application (if applicable) no later than ${fmtDateEN(v('licenseDeadline'))}.`),
 
         // Clause 7-11
-        clauseTitle('ข้อ 7. การรับประกันของผู้ขาย'),
-        subpara('7.1 ผู้ขายรับประกันว่าที่ดินปลอดจากภาระผูกพัน จำนอง หรือสิทธิของบุคคลที่สาม'),
-        subpara('7.2 ผู้ขายรับประกันว่าที่ดินได้รับการพัฒนาโครงสร้างพื้นฐาน (ถนน ไฟฟ้า ประปา) ตามมาตรฐาน'),
-        subpara('7.3 ผู้ขายรับประกันว่าที่ดินตั้งอยู่ในเขตนิคมอุตสาหกรรมที่ได้รับอนุญาตโดยถูกต้องตามกฎหมาย'),
+        clauseTitle('ข้อ 7. การรับประกันของผู้ขาย', 'Clause 7. Seller Warranties'),
+        subpara('7.1 ผู้ขายรับประกันว่าที่ดินปลอดจากภาระผูกพัน จำนอง หรือสิทธิของบุคคลที่สาม', '7.1 The Seller warrants that the land is free from encumbrances, mortgages, or third-party claims.'),
+        subpara('7.2 ผู้ขายรับประกันว่าที่ดินได้รับการพัฒนาโครงสร้างพื้นฐาน (ถนน ไฟฟ้า ประปา) ตามมาตรฐาน', '7.2 The Seller warrants that the land has been developed with standard infrastructure (roads, electricity, water supply).'),
+        subpara('7.3 ผู้ขายรับประกันว่าที่ดินตั้งอยู่ในเขตนิคมอุตสาหกรรมที่ได้รับอนุญาตโดยถูกต้องตามกฎหมาย', '7.3 The Seller warrants that the land is situated within a legally authorized industrial estate zone.'),
 
-        clauseTitle('ข้อ 8. ความรับผิดด้านสิ่งแวดล้อมและความปลอดภัย'),
-        para('ผู้ซื้อรับผิดชอบต่อผลกระทบด้านสิ่งแวดล้อมที่เกิดจากการประกอบกิจการของตน และต้องปฏิบัติตามมาตรฐานการจัดการสิ่งแวดล้อมของนิคมและกฎหมายที่บังคับใช้ทุกประการ'),
+        clauseTitle('ข้อ 8. ความรับผิดด้านสิ่งแวดล้อมและความปลอดภัย', 'Clause 8. Environmental and Safety Liability'),
+        subpara('ผู้ซื้อรับผิดชอบต่อผลกระทบด้านสิ่งแวดล้อมที่เกิดจากการประกอบกิจการของตน และต้องปฏิบัติตามมาตรฐานการจัดการสิ่งแวดล้อมของนิคมและกฎหมายที่บังคับใช้ทุกประการ', 'The Buyer is liable for all environmental impacts arising from its operations and must comply with the estate\'s environmental management standards and all applicable laws.'),
 
-        clauseTitle('ข้อ 9. เหตุผิดนัดและการบอกเลิกสัญญา'),
-        subpara('9.1 หากผู้ซื้อผิดนัดชำระราคา ผู้ขายมีสิทธิบอกเลิกสัญญาและริบเงินจอง/เงินดาวน์ที่ชำระมาแล้ว'),
-        subpara('9.2 หากผู้ซื้อไม่เริ่มก่อสร้างหรือไม่เริ่มดำเนินการเชิงพาณิชย์ตามกำหนด ผู้ขายมีสิทธิเรียกค่าปรับร้อยละ 0.1 ต่อวันของราคาที่ดิน'),
-        subpara('9.3 หากผู้ขายผิดสัญญา ผู้ซื้อมีสิทธิบอกเลิกสัญญาและเรียกเงินคืนพร้อมดอกเบี้ยร้อยละ 7.5 ต่อปี'),
+        clauseTitle('ข้อ 9. เหตุผิดนัดและการบอกเลิกสัญญา', 'Clause 9. Default and Termination'),
+        subpara('9.1 หากผู้ซื้อผิดนัดชำระราคา ผู้ขายมีสิทธิบอกเลิกสัญญาและริบเงินจอง/เงินดาวน์ที่ชำระมาแล้ว', '9.1 If the Buyer defaults on payment, the Seller has the right to terminate this Agreement and forfeit the reservation fee/down payment already paid.'),
+        subpara('9.2 หากผู้ซื้อไม่เริ่มก่อสร้างหรือไม่เริ่มดำเนินการเชิงพาณิชย์ตามกำหนด ผู้ขายมีสิทธิเรียกค่าปรับร้อยละ 0.1 ต่อวันของราคาที่ดิน', '9.2 If the Buyer fails to commence construction or commercial operations as scheduled, the Seller may impose a penalty of 0.1% of the land price per day of delay.'),
+        subpara('9.3 หากผู้ขายผิดสัญญา ผู้ซื้อมีสิทธิบอกเลิกสัญญาและเรียกเงินคืนพร้อมดอกเบี้ยร้อยละ 7.5 ต่อปี', '9.3 If the Seller breaches this Agreement, the Buyer has the right to terminate and claim a full refund with interest at 7.5% per annum.'),
 
-        clauseTitle('ข้อ 10. กฎหมายที่ใช้บังคับและการระงับข้อพิพาท'),
-        para('สัญญาฉบับนี้อยู่ภายใต้บังคับกฎหมายแห่งราชอาณาจักรไทย หากมีข้อพิพาทให้ระงับโดยอนุญาโตตุลาการตามข้อบังคับของสถาบันอนุญาโตตุลาการ สำนักงานศาลยุติธรรม หรือศาลที่มีเขตอำนาจ'),
+        clauseTitle('ข้อ 10. กฎหมายที่ใช้บังคับและการระงับข้อพิพาท', 'Clause 10. Governing Law and Dispute Resolution'),
+        subpara('สัญญาฉบับนี้อยู่ภายใต้บังคับกฎหมายแห่งราชอาณาจักรไทย หากมีข้อพิพาทให้ระงับโดยอนุญาโตตุลาการตามข้อบังคับของสถาบันอนุญาโตตุลาการ สำนักงานศาลยุติธรรม หรือศาลที่มีเขตอำนาจ', 'This Agreement shall be governed by the laws of the Kingdom of Thailand. Any dispute shall be resolved by arbitration under the rules of the Thai Arbitration Institute, Office of the Judiciary, or a court of competent jurisdiction.'),
 
-        clauseTitle('ข้อ 11. บทบัญญัติทั่วไป'),
-        subpara('11.1 สัญญาฉบับนี้ถือเป็นข้อตกลงทั้งหมด ยกเลิกข้อตกลงก่อนหน้าทั้งหมด'),
-        subpara('11.2 การแก้ไขสัญญาต้องทำเป็นลายลักษณ์อักษรลงนามโดยผู้มีอำนาจของทั้งสองฝ่าย'),
-        subpara('11.3 สัญญาฉบับนี้จัดทำสองฉบับ มีข้อความตรงกัน คู่สัญญาแต่ละฝ่ายถือไว้ฉบับละหนึ่งฉบับ'),
+        clauseTitle('ข้อ 11. บทบัญญัติทั่วไป', 'Clause 11. General Provisions'),
+        subpara('11.1 สัญญาฉบับนี้ถือเป็นข้อตกลงทั้งหมด ยกเลิกข้อตกลงก่อนหน้าทั้งหมด', '11.1 This Agreement constitutes the entire agreement between the parties and supersedes all prior agreements.'),
+        subpara('11.2 การแก้ไขสัญญาต้องทำเป็นลายลักษณ์อักษรลงนามโดยผู้มีอำนาจของทั้งสองฝ่าย', '11.2 Any amendment to this Agreement must be made in writing and signed by authorized representatives of both parties.'),
+        subpara('11.3 สัญญาฉบับนี้จัดทำสองฉบับ มีข้อความตรงกัน คู่สัญญาแต่ละฝ่ายถือไว้ฉบับละหนึ่งฉบับ', '11.3 This Agreement is made in two identical copies, one copy to be retained by each party.'),
 
         // Signatures
         new Paragraph({ spacing:{before:400, after:200}, children:[new TextRun({ text:'ลายมือชื่อคู่สัญญา / SIGNATURES', bold:true, size:26, font:'TH Sarabun New', color:'1a5c2e' })] }),
